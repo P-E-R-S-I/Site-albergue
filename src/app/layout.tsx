@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import ScrollAnimator from "@/components/ScrollAnimator";
 
 export const metadata: Metadata = {
   title: {
@@ -25,6 +26,9 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body className="bg-svp-cream">
+        {/* Barra de progresso de scroll */}
+        <div id="scroll-progress" aria-hidden="true" />
+        <ScrollAnimator />
         <Header />
         <main>{children}</main>
         <Footer />

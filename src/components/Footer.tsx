@@ -1,6 +1,9 @@
 import Link from "next/link";
-import { MapPin, Phone, Clock, Heart } from "lucide-react";
+import Image from "next/image";
+import { MapPin, Phone, Clock, Heart, Instagram } from "lucide-react";
 import { PLACEHOLDER_INFO_ALBERGUE } from "@/lib/dados-placeholder";
+
+const INSTAGRAM_URL = "https://www.instagram.com/vicentedepaulodejatai";
 
 export default function Footer() {
   return (
@@ -31,22 +34,35 @@ export default function Footer() {
       {/* Corpo do footer */}
       <div className="max-w-6xl mx-auto px-5 lg:px-8 py-12 grid grid-cols-1 md:grid-cols-3 gap-10">
 
-        {/* Coluna 1 — Identidade */}
+        {/* Coluna 1 — Identidade com logo real */}
         <div>
           <div className="flex items-center gap-3 mb-4">
-            <svg viewBox="0 0 36 36" fill="none" className="w-8 h-8 flex-shrink-0">
-              <path d="M4 17L18 5L32 17V32H23V24H13V32H4V17Z"
-                fill="#803320" fillOpacity="0.4" stroke="#A8492D" strokeWidth="2" strokeLinejoin="round" />
-              <rect x="16" y="10" width="4" height="10" rx="1" fill="#A8492D" />
-              <rect x="12" y="14" width="12" height="4" rx="1" fill="#A8492D" />
-            </svg>
-            <p className="font-display text-svp-cream text-lg font-semibold">
-              Albergue São Vicente de Paula
+            <div className="w-9 h-9 relative flex-shrink-0">
+              <Image
+                src="/logo.png"
+                alt="Logo Albergue São Vicente de Paula"
+                fill
+                className="object-contain"
+              />
+            </div>
+            <p className="font-display text-svp-cream text-base font-semibold leading-tight">
+              Albergue São Vicente<br />
+              <span className="text-svp-cream/50 text-sm font-normal">de Paula</span>
             </p>
           </div>
-          <p className="text-svp-cream/60 text-sm leading-relaxed">
+          <p className="text-svp-cream/60 text-sm leading-relaxed mb-5">
             {PLACEHOLDER_INFO_ALBERGUE.missao}
           </p>
+          {/* Instagram link */}
+          <a
+            href={INSTAGRAM_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 text-svp-cream/50 hover:text-svp-cream text-sm transition-colors"
+          >
+            <Instagram size={15} />
+            @vicentedepaulodejatai
+          </a>
         </div>
 
         {/* Coluna 2 — Links */}

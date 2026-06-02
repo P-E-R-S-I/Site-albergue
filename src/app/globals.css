@@ -9,9 +9,6 @@
   --font-jakarta: 'Plus Jakarta Sans', system-ui, sans-serif;
 }
 
-/* =============================================
-   BASE
-   ============================================= */
 html {
   scroll-behavior: smooth;
 }
@@ -23,18 +20,95 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* =============================================
-   TIPOGRAFIA CUSTOMIZADA
-   ============================================= */
 .font-display {
   font-family: var(--font-lora);
 }
 
-/* =============================================
-   UTILITÁRIOS
-   ============================================= */
+/* ── Scroll progress bar ── */
+#scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  background: #803320;
+  width: 0%;
+  z-index: 9999;
+  transition: width 0.05s linear;
+  pointer-events: none;
+}
 
-/* Textura de grain sutil no background */
+/* ── Animações de entrada ── */
+[data-animate] {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+}
+[data-animate].in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+[data-animate][data-delay="1"] { transition-delay: 0.1s; }
+[data-animate][data-delay="2"] { transition-delay: 0.2s; }
+[data-animate][data-delay="3"] { transition-delay: 0.3s; }
+[data-animate][data-delay="4"] { transition-delay: 0.4s; }
+[data-animate][data-delay="5"] { transition-delay: 0.5s; }
+
+/* ── Zoom word section ── */
+.zoom-section {
+  position: relative;
+}
+.zoom-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.zoom-word {
+  font-family: var(--font-lora);
+  font-weight: 700;
+  color: #803320;
+  line-height: 1;
+  transition: font-size 0.04s linear;
+  will-change: font-size;
+  text-align: center;
+}
+
+/* ── Carrossel de depoimentos ── */
+.depo-track {
+  display: flex;
+  transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* ── Carrossel Instagram ── */
+.insta-track {
+  display: flex;
+  gap: 16px;
+  transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* ── Divisor SVG wave ── */
+.wave-divider {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  line-height: 0;
+}
+.wave-divider svg {
+  display: block;
+  width: 100%;
+}
+
+/* ── Stat counter ── */
+.stat-number {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Grain overlay sutil ── */
 .bg-grain::after {
   content: '';
   position: absolute;
@@ -44,35 +118,7 @@ body {
   z-index: 0;
 }
 
-/* Linha decorativa ornamental */
-.ornament {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  color: #B8892A;
-}
-.ornament::before,
-.ornament::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: currentColor;
-  opacity: 0.4;
-}
-
-/* Animação de entrada com delay escalonado */
-[data-animate] {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-}
-[data-animate].in-view {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* Estilo para o badge de urgente */
+/* ── Badge urgente ── */
 .badge-urgente {
   display: inline-flex;
   align-items: center;
@@ -88,10 +134,13 @@ body {
   padding: 2px 7px;
 }
 
-/* =============================================
-   RECHARTS — override de fonte
-   ============================================= */
+/* ── Recharts ── */
 .recharts-text {
   font-family: var(--font-jakarta) !important;
   font-size: 12px !important;
+}
+
+/* ── Parallax hero ── */
+.parallax-bg {
+  will-change: transform;
 }

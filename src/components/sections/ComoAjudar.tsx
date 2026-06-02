@@ -29,21 +29,24 @@ const FORMAS = [
 export default function ComoAjudar() {
   return (
     <section className="bg-svp-dark py-24 relative overflow-hidden">
-      {/* Decoração de fundo */}
       <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-svp-sienna/5 rounded-full blur-3xl" />
       </div>
 
       <div className="relative max-w-6xl mx-auto px-5 lg:px-8">
         <div className="text-center mb-14">
-          <div className="flex items-center justify-center gap-3 mb-5">
+          <div className="flex items-center justify-center gap-3 mb-5" data-animate>
             <div className="h-px w-10 bg-svp-amber" />
             <span className="text-svp-amber text-xs tracking-[0.22em] uppercase font-semibold">
               Como contribuir
             </span>
             <div className="h-px w-10 bg-svp-amber" />
           </div>
-          <h2 className="font-display text-4xl md:text-5xl text-svp-cream font-semibold">
+          <h2
+            className="font-display text-4xl md:text-5xl text-svp-cream font-semibold"
+            data-animate
+            data-delay="1"
+          >
             Há uma forma de ajudar<br />
             <em className="text-svp-amber">para cada pessoa.</em>
           </h2>
@@ -53,7 +56,9 @@ export default function ComoAjudar() {
           {FORMAS.map((f, i) => (
             <div
               key={i}
-              className={`border rounded-2xl p-7 ${f.cor} flex flex-col`}
+              className={`border rounded-2xl p-7 ${f.cor} flex flex-col hover:scale-[1.02] transition-transform duration-300`}
+              data-animate
+              data-delay={String(i + 1)}
             >
               <div className="mb-4">{f.icon}</div>
               <h3 className="font-display text-2xl text-svp-cream font-semibold mb-3">

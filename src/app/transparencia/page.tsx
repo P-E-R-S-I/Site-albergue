@@ -94,8 +94,8 @@ export default async function TransparenciaPage() {
               Prestação de contas
             </span>
           </div>
-          <h1 className="font-display text-5xl text-svp-cream font-semibold">
-            <em className="text-svp-sienna">Transparência</em>
+          <h1 className="font-display text-5xl text-white font-semibold">
+            <em className="text-white">Transparência</em>
           </h1>
           <p className="text-svp-cream/60 mt-3 max-w-2xl leading-relaxed">
             Toda doação recebida e todo gasto realizado são registrados no nosso sistema
@@ -111,9 +111,9 @@ export default async function TransparenciaPage() {
             </div>
           )}
           {!USE_MOCK && (
-            <div className="mt-6 inline-flex items-center gap-2 bg-svp-forest/10 border border-svp-forest/30 rounded-lg px-4 py-2.5">
-              <RefreshCw size={14} className="text-svp-forest" />
-              <p className="text-svp-forest text-xs font-medium">
+            <div className="mt-6 inline-flex items-center gap-2 bg-emerald-400/20 border border-emerald-400/50 rounded-lg px-4 py-2.5">
+              <RefreshCw size={14} className="text-emerald-400" />
+              <p className="text-emerald-400 text-xs font-medium">
                 Dados reais — gerados a partir dos registros do sistema interno em tempo real.
               </p>
             </div>

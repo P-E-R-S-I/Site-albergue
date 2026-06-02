@@ -8,25 +8,25 @@ const STATS = [
     icon: <Home size={22} className="text-svp-sienna" />,
     valor: PLACEHOLDER_ESTATISTICAS.idososAtendidos,
     label: "Idosos acolhidos",
-    sufixo: "+",
+    sufixo: "",
   },
   {
     icon: <UserCheck size={22} className="text-svp-forest" />,
     valor: PLACEHOLDER_ESTATISTICAS.voluntariosAtivos,
     label: "Voluntários ativos",
-    sufixo: "",
+    sufixo: "+",
   },
   {
     icon: <Calendar size={22} className="text-svp-amber" />,
     valor: PLACEHOLDER_ESTATISTICAS.anosDeServico,
     label: "Anos de serviço",
-    sufixo: "+",
+    sufixo: "",
   },
   {
     icon: <Users size={22} className="text-svp-sage" />,
     valor: PLACEHOLDER_ESTATISTICAS.familiasBeneficiadas,
     label: "Famílias beneficiadas",
-    sufixo: "+",
+    sufixo: "",
   },
 ];
 

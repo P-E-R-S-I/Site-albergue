@@ -98,7 +98,12 @@ export default function Footer() {
             </li>
             <li className="flex items-start gap-3">
               <Phone size={15} className="text-svp-amber mt-0.5 flex-shrink-0" />
-              <span className="text-svp-cream/60 text-sm">{PLACEHOLDER_INFO_ALBERGUE.telefone}</span>
+              <a
+                href={`tel:${PLACEHOLDER_INFO_ALBERGUE.telefone.replace(/\D/g, "")}`}
+                className="text-svp-cream/60 hover:text-svp-cream text-sm transition-colors"
+              >
+                {PLACEHOLDER_INFO_ALBERGUE.telefone}
+              </a>
             </li>
             <li className="flex items-start gap-3">
               <Clock size={15} className="text-svp-amber mt-0.5 flex-shrink-0" />
@@ -106,7 +111,16 @@ export default function Footer() {
                 Visitas: {PLACEHOLDER_INFO_ALBERGUE.horarioVisitas}
               </span>
             </li>
+            <li className="flex items-start gap-3">
+              <Clock size={15} className="text-svp-amber mt-0.5 flex-shrink-0" />
+              <span className="text-svp-cream/60 text-sm">
+                Doações: {PLACEHOLDER_INFO_ALBERGUE.horarioDoacoes}
+              </span>
+            </li>
           </ul>
+          <p className="text-svp-cream/30 text-xs mt-5 leading-relaxed">
+            {PLACEHOLDER_INFO_ALBERGUE.vinculo}
+          </p>
         </div>
       </div>
 

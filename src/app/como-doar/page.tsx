@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
-import { Copy, Heart, AlertTriangle, CheckCircle2, MapPin, Package } from "lucide-react";
+import { Heart, AlertTriangle, CheckCircle2, MapPin, Package } from "lucide-react";
 import { PLACEHOLDER_INFO_ALBERGUE } from "@/lib/dados-placeholder";
 import { getItensNecessarios } from "@/lib/supabase";
 import RealtimeRefresher from "@/components/RealtimeRefresher";
+import Image from "next/image";
+import PixCopyButton from "@/components/PixCopyButton";
 
 export const metadata: Metadata = {
   title: "Como Doar",
@@ -61,38 +63,21 @@ export default async function ComoDoarPage() {
               </div>
             </div>
 
-            {/* QR Code placeholder */}
-            <div className="bg-svp-linen rounded-xl h-44 flex items-center justify-center mb-5 border border-dashed border-svp-border">
-              <div className="text-center text-svp-muted">
-                <div className="w-20 h-20 bg-svp-border/50 rounded-md mx-auto mb-2 grid grid-cols-3 gap-1 p-2">
-                  {Array.from({ length: 9 }).map((_, i) => (
-                    <div
-                      key={i}
-                      className="rounded-sm"
-                      style={{
-                        background: [0,2,6,8].includes(i) ? "#803320" : i === 4 ? "#803320" : "#D9CEBD",
-                      }}
-                    />
-                  ))}
-                </div>
-                <p className="text-xs">Substitua pelo QR Code real</p>
+            {/* QR Code real — Pix do Albergue */}
+            <div className="flex justify-center mb-5">
+              <div className="rounded-2xl overflow-hidden border border-svp-border shadow-sm bg-white p-3">
+                <Image
+                  src="/qr-pix.png"
+                  alt="QR Code Pix — Albergue São Vicente de Paula"
+                  width={200}
+                  height={200}
+                  className="block"
+                  priority
+                />
               </div>
             </div>
 
-            <div className="bg-svp-linen rounded-xl p-4 flex items-center justify-between gap-3">
-              <div>
-                <p className="text-svp-muted text-xs mb-1">Chave Pix (CNPJ)</p>
-                <p className="font-mono text-svp-dark font-semibold text-sm">
-                  {PLACEHOLDER_INFO_ALBERGUE.pixKey}
-                </p>
-              </div>
-              <button
-                title="Copiar chave Pix"
-                className="w-9 h-9 rounded-lg bg-svp-cream border border-svp-border flex items-center justify-center hover:bg-svp-border transition-colors flex-shrink-0"
-              >
-                <Copy size={14} className="text-svp-muted" />
-              </button>
-            </div>
+            <PixCopyButton pixKey={PLACEHOLDER_INFO_ALBERGUE.pixKey} />
 
             <p className="text-svp-muted text-xs mt-3">
               Após a transferência, todas as doações são lançadas no painel de
@@ -106,14 +91,14 @@ export default async function ComoDoarPage() {
 
           {/* Card TED/Depósito */}
           <div className="bg-white border border-svp-border rounded-2xl p-6">
-            <p className="font-semibold text-svp-dark mb-3">TED ou depósito bancário</p>
+            <p className="font-semibold text-svp-dark mb-3">Depósito bancário</p>
             <div className="space-y-2 text-sm">
               {[
-                ["Banco", "000 — Placeholder"],
-                ["Agência", "0001"],
-                ["Conta", "00000-0 (Conta Corrente)"],
+                ["Banco", PLACEHOLDER_INFO_ALBERGUE.banco],
+                ["Agência", PLACEHOLDER_INFO_ALBERGUE.agencia],
+                ["Conta", PLACEHOLDER_INFO_ALBERGUE.conta],
                 ["CNPJ", PLACEHOLDER_INFO_ALBERGUE.pixKey],
-                ["Titular", PLACEHOLDER_INFO_ALBERGUE.nome],
+                ["Titular", PLACEHOLDER_INFO_ALBERGUE.titular],
               ].map(([label, val]) => (
                 <div key={label} className="flex justify-between">
                   <span className="text-svp-muted">{label}</span>
@@ -177,7 +162,7 @@ export default async function ComoDoarPage() {
             </p>
             <div className="bg-white/10 rounded-xl p-4 text-sm space-y-1 mb-5">
               <p><span className="text-white/50">Endereço: </span>{PLACEHOLDER_INFO_ALBERGUE.endereco}</p>
-              <p><span className="text-white/50">Horário: </span>Seg–Sex, 8h às 17h</p>
+              <p><span className="text-white/50">Recebemos doações: </span>{PLACEHOLDER_INFO_ALBERGUE.horarioDoacoes}</p>
             </div>
             <a
               href={PLACEHOLDER_INFO_ALBERGUE.whatsapp}

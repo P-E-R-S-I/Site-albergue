@@ -33,69 +33,76 @@ export const PLACEHOLDER_ESTOQUE = [
 ];
 
 export const PLACEHOLDER_ITENS_MAIS_NECESSARIOS = [
-  { item: "Fraldas Geriátricas tamanho G e EG", urgente: true },
-  { item: "Creme Dental e Escova de Dentes", urgente: true },
-  { item: "Sabonete e Shampoo neutro", urgente: false },
-  { item: "Arroz, feijão e macarrão", urgente: false },
-  { item: "Óleo de cozinha (qualquer marca)", urgente: false },
-  { item: "Absorventes geriátricos", urgente: true },
-  { item: "Cobertores e travesseiros", urgente: false },
-  { item: "Medicamentos: analgésicos e antissépticos", urgente: true },
+  { item: "Fraldas Geriátricas", urgente: true },
+  { item: "Shampoo e Condicionador", urgente: false },
+  { item: "Hidratante corporal", urgente: false },
+  { item: "Enxaguante bucal", urgente: false },
+  { item: "Meias", urgente: false },
+  { item: "Blusas de frio", urgente: false },
+  { item: "Toalhas de banho", urgente: false },
+  { item: "Lençóis", urgente: false },
 ];
 
 export const PLACEHOLDER_FAQ = [
   {
     pergunta: "Qual é o horário de visitas?",
     resposta:
-      "As visitas são permitidas de segunda a sexta, das 9h às 11h e das 14h às 17h. Aos finais de semana, das 10h às 16h. Pedimos que agende com antecedência pelo WhatsApp para garantir que o residente esteja disponível.",
+      "As visitas são permitidas todos os dias, das 13h às 15h30. As visitas podem ser suspensas em períodos de surto de viroses para proteger a saúde dos residentes. Recomendamos entrar em contato pelo WhatsApp antes de vir para confirmar a disponibilidade.",
   },
   {
     pergunta: "Quais itens o Albergue aceita como doação?",
     resposta:
-      "Aceitamos alimentos não perecíveis (arroz, feijão, macarrão, óleo, açúcar), itens de higiene pessoal (sabonete, shampoo, creme dental, fraldas geriátricas), roupas em bom estado, cobertores e medicamentos dentro do prazo de validade. Não aceitamos alimentos vencidos ou itens danificados.",
+      "Aceitamos alimentos não perecíveis, itens de higiene pessoal (shampoo, condicionador, hidratante, enxaguante bucal, fraldas geriátricas), roupas em bom estado, blusas de frio, meias, toalhas, lençóis, cobertores, medicamentos dentro do prazo de validade e móveis em boas condições. Não aceitamos objetos que possam oferecer risco aos moradores.",
   },
   {
     pergunta: "Como faço para fazer uma doação em dinheiro?",
     resposta:
-      "Aceitamos transferências via Pix, TED ou depósito bancário. A chave Pix está disponível na página 'Como Doar'. Todas as doações financeiras são registradas e publicadas mensalmente no nosso painel de transparência.",
+      "Aceitamos doações exclusivamente via Pix institucional. A chave Pix (CNPJ) está disponível na página 'Como Doar'. Todas as doações financeiras são registradas e publicadas no nosso painel de transparência.",
   },
   {
     pergunta: "O Albergue aceita voluntários?",
     resposta:
-      "Sim! Temos programas de voluntariado nas áreas de recreação, apoio administrativo e acompanhamento dos idosos. Entre em contato pelo WhatsApp para conhecer as oportunidades disponíveis e agendar uma conversa com nossa equipe.",
+      "Sim, o voluntariado é sempre muito bem-vindo! Temos oportunidades nas áreas de recreação, apoio administrativo e acompanhamento dos residentes. Entre em contato pelo WhatsApp para conhecer as formas de contribuir com o seu tempo.",
   },
   {
-    pergunta: "Posso levar meu familiar para o Albergue?",
+    pergunta: "Posso encaminhar meu familiar para o Albergue?",
     resposta:
-      "O Albergue atende idosos em situação de vulnerabilidade social. O processo de ingresso envolve avaliação social e médica. Entre em contato conosco pelo WhatsApp ou telefone para agendar uma visita de avaliação.",
+      "No momento não há vagas disponíveis. Para futuras admissões, entre em contato pelo WhatsApp para verificar a disponibilidade e conhecer os critérios de admissão. O processo envolve avaliação social e de saúde.",
   },
   {
     pergunta: "Como funciona o acompanhamento médico dos residentes?",
     resposta:
-      "Contamos com visitas periódicas de médicos e enfermeiros. Medicamentos controlados são administrados conforme prescrição médica, e todo o histórico é registrado. Em casos de emergência, acionamos o SAMU e mantemos a família informada.",
+      "Os residentes contam com acompanhamento médico por meio de atendimento voluntário. Medicamentos são administrados conforme prescrição, e em casos de emergência os procedimentos adequados são acionados para garantir a segurança de cada residente.",
   },
   {
     pergunta: "Como posso acompanhar o uso das doações?",
     resposta:
-      "Toda entrada e saída de estoque e financeiro é registrada e publicada na nossa página de Transparência. Você pode ver os gráficos de doações, gastos e nível de estoque em tempo real, mês a mês.",
+      "Toda entrada e saída de estoque e movimentação financeira é registrada e publicada na nossa página de Transparência. Você pode acompanhar os gráficos de doações, gastos e nível de estoque mês a mês.",
   },
 ];
 
 export const PLACEHOLDER_ESTATISTICAS = {
-  idososAtendidos: 80,
-  voluntariosAtivos: 24,
-  anosDeServico: 12,
-  familiasBeneficiadas: 68,
+  idososAtendidos: 78,
+  voluntariosAtivos: 100,
+  anosDeServico: 55,
+  familiasBeneficiadas: 78,
 };
 
 export const PLACEHOLDER_INFO_ALBERGUE = {
   nome: "Albergue São Vicente de Paula",
   endereco: "Sit Betânia, 1, Zona Rural — Jataí, GO, 75800-000",
-  telefone: "(64) 9XXXX-XXXX",
-  whatsapp: "https://wa.me/5564900000000",
+  telefone: "(64) 99983-9893",
+  email: "financeiroalbergue@gmail.com",
+  whatsapp: "https://wa.me/5564999839893",
   pixKey: "02.251.270/0001-09", // CNPJ
+  banco: "Sicoob",
+  agencia: "5014",
+  conta: "6696 (Conta Corrente)",
+  titular: "Associação de Beneficentes Albergue São Vicente de Paulo",
   horarioFuncionamento: "24 horas por dia, 7 dias por semana",
-  horarioVisitas: "Seg–Sex: 9h–11h e 14h–17h | Sáb–Dom: 10h–16h",
+  horarioVisitas: "Todos os dias: 13h às 15h30",
+  horarioDoacoes: "Seg–Sex: 8h às 11h e 13h às 17h",
   missao:
     "Oferecer acolhimento, cuidado e dignidade a idosos em situação de vulnerabilidade social, promovendo qualidade de vida com amor e respeito.",
+  vinculo: "Instituição filantrópica de orientação espírita.",
 };

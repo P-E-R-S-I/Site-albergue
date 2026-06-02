@@ -52,7 +52,7 @@ export default function Hero() {
           >
             <div className="h-px w-10 bg-svp-amber" />
             <span className="text-svp-amber text-xs tracking-[0.22em] uppercase font-semibold">
-              Jataí, Goiás · Desde 2014
+              Jataí, Goiás · Desde 1971
             </span>
           </div>
 
@@ -125,7 +125,7 @@ export default function Hero() {
               ))}
             </div>
             <p className="text-svp-muted text-sm leading-tight">
-              <strong className="text-svp-dark">80+ idosos</strong> recebem<br />
+              <strong className="text-svp-dark">78 idosos</strong> recebem<br />
               cuidado todos os dias
             </p>
           </div>

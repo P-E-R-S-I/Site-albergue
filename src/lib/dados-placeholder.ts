@@ -90,10 +90,10 @@ export const PLACEHOLDER_ESTATISTICAS = {
 
 export const PLACEHOLDER_INFO_ALBERGUE = {
   nome: "Albergue São Vicente de Paula",
-  endereco: "Rua Exemplo, 000 — Jataí, GO",
+  endereco: "Sit Betânia, 1, Zona Rural — Jataí, GO, 75800-000",
   telefone: "(64) 9XXXX-XXXX",
   whatsapp: "https://wa.me/5564900000000",
-  pixKey: "00.000.000/0001-00", // CNPJ placeholder
+  pixKey: "02.251.270/0001-09", // CNPJ
   horarioFuncionamento: "24 horas por dia, 7 dias por semana",
   horarioVisitas: "Seg–Sex: 9h–11h e 14h–17h | Sáb–Dom: 10h–16h",
   missao:

@@ -86,16 +86,19 @@ export default function HomePage() {
           </div>
 
           <div
-            className="rounded-2xl overflow-hidden border border-svp-border bg-svp-linen h-80 flex items-center justify-center"
+            className="rounded-2xl overflow-hidden border border-svp-border h-80"
             data-animate data-delay="2"
           >
-            <div className="text-center text-svp-muted">
-              <MapPin size={32} className="mx-auto mb-3 text-svp-sienna/40" />
-              <p className="text-sm font-medium">Mapa do Google Maps</p>
-              <p className="text-xs mt-1 max-w-[200px] mx-auto">
-                Substitua pelo embed real nas instruções do código
-              </p>
-            </div>
+            <iframe
+              src="https://www.google.com/maps?q=-17.8624477,-51.718235&z=16&output=embed"
+              width="100%"
+              height="100%"
+              style={{ border: 0 }}
+              allowFullScreen
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              title="Localização do Albergue São Vicente de Paula"
+            />
           </div>
         </div>
       </section>

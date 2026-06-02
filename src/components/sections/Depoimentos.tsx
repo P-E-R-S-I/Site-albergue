@@ -56,16 +56,15 @@ export default function Depoimentos() {
           <div className="h-px w-10 bg-svp-amber" />
         </div>
 
-        {/* Citação grande decorativa */}
-        <div
-          className="font-display text-[120px] md:text-[160px] text-svp-sienna/8 leading-none select-none absolute -translate-x-4"
-          aria-hidden="true"
-        >
-          &ldquo;
-        </div>
-
         {/* Texto do depoimento */}
         <div className="relative min-h-[160px] flex items-center justify-center" data-animate data-delay="1">
+          {/* Citação grande decorativa — acima e à esquerda, sem sobrepor o texto */}
+          <div
+            className="font-display text-[96px] md:text-[120px] text-svp-sienna/10 leading-none select-none absolute -top-10 left-0 pointer-events-none"
+            aria-hidden="true"
+          >
+            &ldquo;
+          </div>
           <blockquote
             key={current}
             className="font-display text-2xl md:text-3xl text-svp-dark italic leading-snug font-medium text-center"

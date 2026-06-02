@@ -53,7 +53,7 @@ export default function Header() {
                 href={link.href}
                 className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
                   pathname === link.href
-                    ? "bg-svp-sienna/10 text-svp-sienna"
+                    ? "bg-svp-sienna/20 text-svp-sienna border border-svp-sienna/20"
                     : "text-svp-brown hover:text-svp-sienna hover:bg-svp-sienna/5"
                 }`}
               >
@@ -94,7 +94,7 @@ export default function Header() {
               onClick={() => setOpen(false)}
               className={`block px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
                 pathname === link.href
-                  ? "bg-svp-sienna/10 text-svp-sienna"
+                  ? "bg-svp-sienna/20 text-svp-sienna border border-svp-sienna/20"
                   : "text-svp-brown hover:text-svp-sienna"
               }`}
             >

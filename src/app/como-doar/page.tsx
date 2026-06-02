@@ -20,18 +20,21 @@ export default async function ComoDoarPage() {
       {/* "O que mais precisamos" atualiza ao vivo conforme o estoque muda no banco */}
       <RealtimeRefresher />
       {/* Cabeçalho da página */}
-      <div className="bg-svp-linen border-b border-svp-border py-16">
-        <div className="max-w-6xl mx-auto px-5 lg:px-8">
+      <div className="bg-svp-dark relative overflow-hidden py-20">
+        <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+          <div className="absolute -top-20 -right-32 w-[500px] h-[500px] rounded-full bg-svp-sienna/10 blur-3xl" />
+        </div>
+        <div className="relative max-w-6xl mx-auto px-5 lg:px-8">
           <div className="flex items-center gap-3 mb-4">
             <div className="h-px w-10 bg-svp-amber" />
             <span className="text-svp-amber text-xs tracking-[0.22em] uppercase font-semibold">
               Contribua
             </span>
           </div>
-          <h1 className="font-display text-5xl text-svp-dark font-semibold">
+          <h1 className="font-display text-5xl text-svp-cream font-semibold">
             Como <em className="text-svp-sienna">Doar</em>
           </h1>
-          <p className="text-svp-brown mt-3 max-w-xl leading-relaxed">
+          <p className="text-svp-cream/60 mt-3 max-w-xl leading-relaxed">
             Escolha a forma que for mais conveniente. Toda doação é registrada
             e publicada no nosso painel de transparência.
           </p>

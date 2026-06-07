@@ -100,9 +100,9 @@ export default async function ComoDoarPage() {
                 ["CNPJ", PLACEHOLDER_INFO_ALBERGUE.pixKey],
                 ["Titular", PLACEHOLDER_INFO_ALBERGUE.titular],
               ].map(([label, val]) => (
-                <div key={label} className="flex justify-between">
-                  <span className="text-svp-muted">{label}</span>
-                  <span className="text-svp-dark font-medium font-mono">{val}</span>
+                <div key={label} className="flex gap-4 items-start">
+                  <span className="text-svp-muted shrink-0 w-16">{label}</span>
+                  <span className="text-svp-dark font-medium font-mono text-right ml-auto">{val}</span>
                 </div>
               ))}
             </div>

@@ -135,7 +135,7 @@ export default function Hero() {
         <div className="relative hidden lg:flex justify-center">
           <div className="relative w-full max-w-md">
             {/*
-              Foto institucional real do Albergue São Vicente de Paula
+              Foto institucional real do Albergue São Vicente de Paulo
             */}
             <div
               className="w-full aspect-[4/5] rounded-3xl overflow-hidden"
@@ -143,7 +143,7 @@ export default function Hero() {
             >
               <Image
                 src="/foto-hero.jpg"
-                alt="Voluntários e equipe do Albergue São Vicente de Paula"
+                alt="Voluntários e equipe do Albergue São Vicente de Paulo"
                 fill
                 className="object-cover"
                 priority

@@ -19,12 +19,12 @@ import { Instagram, ChevronLeft, ChevronRight, ExternalLink } from "lucide-react
 const FOTOS = [
   {
     src: "/insta-1.jpg",
-    alt: "Doação de cestas básicas ao Albergue São Vicente de Paula",
+    alt: "Doação de cestas básicas ao Albergue São Vicente de Paulo",
     post: "https://www.instagram.com/vicentedepaulodejatai",
   },
   {
     src: "/insta-2.jpg",
-    alt: "Visita e grupo de apoio ao Albergue São Vicente de Paula",
+    alt: "Visita e grupo de apoio ao Albergue São Vicente de Paulo",
     post: "https://www.instagram.com/vicentedepaulodejatai",
   },
   {
@@ -34,7 +34,7 @@ const FOTOS = [
   },
   {
     src: "/insta-4.webp",
-    alt: "Doação de fraldas ao Albergue São Vicente de Paula",
+    alt: "Doação de fraldas ao Albergue São Vicente de Paulo",
     post: "https://www.instagram.com/vicentedepaulodejatai",
   },
   {

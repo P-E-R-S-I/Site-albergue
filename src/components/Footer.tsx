@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { MapPin, Phone, Clock, Heart, Instagram } from "lucide-react";
+import { MapPin, Phone, Clock, Heart, Instagram, Mail } from "lucide-react";
 import { PLACEHOLDER_INFO_ALBERGUE } from "@/lib/dados-placeholder";
 
 const INSTAGRAM_URL = "https://www.instagram.com/vicentedepaulodejatai";
@@ -40,14 +40,14 @@ export default function Footer() {
             <div className="w-9 h-9 relative flex-shrink-0">
               <Image
                 src="/logo.png"
-                alt="Logo Albergue São Vicente de Paula"
+                alt="Logo Albergue São Vicente de Paulo"
                 fill
                 className="object-contain"
               />
             </div>
             <p className="font-display text-svp-cream text-base font-semibold leading-tight">
               Albergue São Vicente<br />
-              <span className="text-svp-cream/50 text-sm font-normal">de Paula</span>
+              <span className="text-svp-cream/50 text-sm font-normal">de Paulo</span>
             </p>
           </div>
           <p className="text-svp-cream/60 text-sm leading-relaxed mb-5">
@@ -106,6 +106,15 @@ export default function Footer() {
               </a>
             </li>
             <li className="flex items-start gap-3">
+              <Mail size={15} className="text-svp-amber mt-0.5 flex-shrink-0" />
+              <a
+                href={`mailto:${PLACEHOLDER_INFO_ALBERGUE.email}`}
+                className="text-svp-cream/60 hover:text-svp-cream text-sm transition-colors"
+              >
+                {PLACEHOLDER_INFO_ALBERGUE.email}
+              </a>
+            </li>
+            <li className="flex items-start gap-3">
               <Clock size={15} className="text-svp-amber mt-0.5 flex-shrink-0" />
               <span className="text-svp-cream/60 text-sm">
                 Visitas: {PLACEHOLDER_INFO_ALBERGUE.horarioVisitas}
@@ -127,7 +136,7 @@ export default function Footer() {
       {/* Rodapé */}
       <div className="border-t border-white/10 max-w-6xl mx-auto px-5 lg:px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
         <p className="text-svp-cream/40 text-xs">
-          © {new Date().getFullYear()} Albergue São Vicente de Paula. Todos os direitos reservados.
+          © {new Date().getFullYear()} Albergue São Vicente de Paulo. Todos os direitos reservados.
         </p>
         <p className="text-svp-cream/30 text-xs">
           Site desenvolvido por estudantes de IA — UFJ (Projeto de Extensão)

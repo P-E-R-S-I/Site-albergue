@@ -9,7 +9,7 @@ import PixCopyButton from "@/components/PixCopyButton";
 export const metadata: Metadata = {
   title: "Como Doar",
   description:
-    "Saiba como fazer uma doação para o Albergue São Vicente de Paula — Pix, itens físicos ou voluntariado.",
+    "Saiba como fazer uma doação para o Albergue São Vicente de Paulo — Pix, itens físicos ou voluntariado.",
 };
 
 // Lê do estoque real (view_itens_necessarios) a cada requisição.
@@ -68,7 +68,7 @@ export default async function ComoDoarPage() {
               <div className="rounded-2xl overflow-hidden border border-svp-border shadow-sm bg-white p-3">
                 <Image
                   src="/qr-pix.png"
-                  alt="QR Code Pix — Albergue São Vicente de Paula"
+                  alt="QR Code Pix — Albergue São Vicente de Paulo"
                   width={200}
                   height={200}
                   className="block"

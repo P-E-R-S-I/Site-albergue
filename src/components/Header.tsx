@@ -29,7 +29,7 @@ export default function Header() {
             <div className="w-10 h-10 flex-shrink-0 relative">
               <Image
                 src="/logo.png"
-                alt="Logo Albergue São Vicente de Paula"
+                alt="Logo Albergue São Vicente de Paulo"
                 fill
                 className="object-contain"
                 priority
@@ -37,7 +37,7 @@ export default function Header() {
             </div>
             <div>
               <p className="font-display text-svp-sienna text-lg leading-tight font-semibold tracking-tight group-hover:text-svp-rose transition-colors">
-                São Vicente de Paula
+                São Vicente de Paulo
               </p>
               <p className="text-svp-muted text-[10px] tracking-[0.15em] uppercase leading-none">
                 Albergue · Jataí GO

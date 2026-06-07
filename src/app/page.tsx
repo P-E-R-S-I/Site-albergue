@@ -97,7 +97,7 @@ export default function HomePage() {
               allowFullScreen
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
-              title="Localização do Albergue São Vicente de Paula"
+              title="Localização do Albergue São Vicente de Paulo"
             />
           </div>
         </div>

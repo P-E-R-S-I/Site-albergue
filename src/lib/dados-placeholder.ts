@@ -57,7 +57,7 @@ export const PLACEHOLDER_FAQ = [
   {
     pergunta: "Como faço para fazer uma doação em dinheiro?",
     resposta:
-      "Aceitamos doações exclusivamente via Pix institucional. A chave Pix (CNPJ) está disponível na página 'Como Doar'. Todas as doações financeiras são registradas e publicadas no nosso painel de transparência.",
+      "Aceitamos doações via Pix ou depósito bancário. A chave Pix é o CNPJ da instituição: 02.251.270/0001-09. Também é possível realizar depósito no Sicoob, agência 5014, conta 6696, em nome da Associação de Beneficentes Albergue São Vicente de Paulo. Todas as doações são registradas e publicadas no nosso painel de transparência.",
   },
   {
     pergunta: "O Albergue aceita voluntários?",
@@ -72,7 +72,7 @@ export const PLACEHOLDER_FAQ = [
   {
     pergunta: "Como funciona o acompanhamento médico dos residentes?",
     resposta:
-      "Os residentes contam com acompanhamento médico por meio de atendimento voluntário. Medicamentos são administrados conforme prescrição, e em casos de emergência os procedimentos adequados são acionados para garantir a segurança de cada residente.",
+      "Os residentes contam com acompanhamento médico voluntário do Dr. Danilo, que atende cada residente com dedicação e cuidado. Medicamentos são administrados conforme prescrição médica, e em casos de emergência os procedimentos adequados são acionados para garantir a segurança de cada morador.",
   },
   {
     pergunta: "Como posso acompanhar o uso das doações?",
@@ -89,7 +89,7 @@ export const PLACEHOLDER_ESTATISTICAS = {
 };
 
 export const PLACEHOLDER_INFO_ALBERGUE = {
-  nome: "Albergue São Vicente de Paula",
+  nome: "Albergue São Vicente de Paulo",
   endereco: "Sit Betânia, 1, Zona Rural — Jataí, GO, 75800-000",
   telefone: "(64) 99983-9893",
   email: "financeiroalbergue@gmail.com",

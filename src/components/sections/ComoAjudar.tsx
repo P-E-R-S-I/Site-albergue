@@ -1,11 +1,12 @@
 import Link from "next/link";
 import { Package, DollarSign, MessageCircle, ArrowRight } from "lucide-react";
+import { PLACEHOLDER_INFO_ALBERGUE } from "@/lib/dados-placeholder";
 
 const FORMAS = [
   {
     icon: <DollarSign size={24} className="text-svp-amber" />,
     titulo: "Doação em dinheiro",
-    desc: "Transfira via Pix, TED ou depósito. Toda entrada é registrada no nosso painel de transparência.",
+    desc: "Transfira via Pix ou depósito bancário. Toda entrada é registrada no nosso painel de transparência.",
     href: "/como-doar",
     cor: "bg-svp-amber/10 border-svp-amber/30",
   },
@@ -20,7 +21,7 @@ const FORMAS = [
     icon: <MessageCircle size={24} className="text-svp-forest" />,
     titulo: "Voluntariado",
     desc: "Recreação, apoio administrativo ou acompanhamento dos idosos. Entre em contato para conhecer as oportunidades.",
-    href: "https://wa.me/5564900000000",
+    href: PLACEHOLDER_INFO_ALBERGUE.whatsapp,
     cor: "bg-svp-forest/10 border-svp-forest/30",
     externo: true,
   },

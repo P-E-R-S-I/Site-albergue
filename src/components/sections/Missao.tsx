@@ -26,7 +26,7 @@ export default function Missao() {
           </h2>
 
           <p className="text-svp-brown leading-relaxed mb-4" data-animate data-delay="2">
-            O Albergue São Vicente de Paula é uma instituição sem fins lucrativos dedicada a
+            O Albergue São Vicente de Paulo é uma instituição sem fins lucrativos dedicada a
             oferecer moradia, cuidado e qualidade de vida para idosos em situação de
             vulnerabilidade social na região de Jataí, Goiás.
           </p>

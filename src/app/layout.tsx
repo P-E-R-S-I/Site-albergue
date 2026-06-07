@@ -6,14 +6,14 @@ import ScrollAnimator from "@/components/ScrollAnimator";
 
 export const metadata: Metadata = {
   title: {
-    default: "Albergue São Vicente de Paula",
-    template: "%s | Albergue São Vicente de Paula",
+    default: "Albergue São Vicente de Paulo",
+    template: "%s | Albergue São Vicente de Paulo",
   },
   description:
     "Cuidado, dignidade e esperança para idosos em situação de vulnerabilidade em Jataí, GO. Saiba como ajudar e acompanhe nossa transparência.",
-  keywords: ["lar de idosos", "Jataí", "São Vicente de Paula", "doação", "idosos", "cuidado"],
+  keywords: ["lar de idosos", "Jataí", "São Vicente de Paulo", "doação", "idosos", "cuidado"],
   openGraph: {
-    title: "Albergue São Vicente de Paula",
+    title: "Albergue São Vicente de Paulo",
     description: "Cuidado, dignidade e esperança para idosos em situação de vulnerabilidade.",
     locale: "pt_BR",
     type: "website",

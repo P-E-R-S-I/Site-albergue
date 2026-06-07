@@ -40,11 +40,10 @@ export const metadata: Metadata = {
       "Cuidado, dignidade e esperança para idosos em situação de vulnerabilidade em Jataí, GO.",
     images: ["/foto-hero.jpg"],
   },
-  icons: {
-    icon: "/favicon.ico",
-    apple: "/apple-icon.png",
-  },
 };
+// Favicon e ícones: gerenciados automaticamente pelo Next.js App Router
+// via os arquivos src/app/favicon.ico e src/app/apple-icon.png.
+// NÃO declarar icons no metadata — causa conflito com o arquivo e quebra o favicon em produção.
 
 export default function RootLayout({
   children,

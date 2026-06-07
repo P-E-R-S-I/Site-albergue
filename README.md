@@ -231,6 +231,10 @@ O favicon do site é gerado a partir da `logo.png` do Albergue. Os arquivos fica
 
 > Se a logo do Albergue mudar, basta rodar o script Python usado na geração (`Pillow`) apontando para a nova logo e substituir esses arquivos.
 
+**Importante — por que não declaramos `icons` no `metadata` do `layout.tsx`:**
+
+O Next.js App Router detecta automaticamente o `favicon.ico` dentro de `src/app/` e adiciona a tag correta no `<head>` da página. Se você *também* declarar `icons: { icon: "/favicon.ico" }` no objeto `metadata`, os dois entram em conflito e o favicon quebra em produção (bug conhecido e documentado no repositório do Next.js). A regra é: **arquivo em `src/app/` OU declaração no `metadata` — nunca os dois ao mesmo tempo.** O projeto usa apenas o arquivo.
+
 ---
 
 ## SEO e Open Graph

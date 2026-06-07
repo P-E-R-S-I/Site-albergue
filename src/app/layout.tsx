@@ -40,10 +40,18 @@ export const metadata: Metadata = {
       "Cuidado, dignidade e esperança para idosos em situação de vulnerabilidade em Jataí, GO.",
     images: ["/foto-hero.jpg"],
   },
+  // Favicon declarado explicitamente via metadata.icons apontando para public/
+  // (abordagem mais confiável no Netlify — arquivos em public/ chegam sempre no deploy)
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "48x48", type: "image/x-icon" },
+      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
+    ],
+    apple: [
+      { url: "/apple-icon.png", sizes: "180x180", type: "image/png" },
+    ],
+  },
 };
-// Favicon e ícones: gerenciados automaticamente pelo Next.js App Router
-// via os arquivos src/app/favicon.ico e src/app/apple-icon.png.
-// NÃO declarar icons no metadata — causa conflito com o arquivo e quebra o favicon em produção.
 
 export default function RootLayout({
   children,

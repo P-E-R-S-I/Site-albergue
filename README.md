@@ -231,9 +231,21 @@ O favicon do site é gerado a partir da `logo.png` do Albergue. Os arquivos fica
 
 > Se a logo do Albergue mudar, basta rodar o script Python usado na geração (`Pillow`) apontando para a nova logo e substituir esses arquivos.
 
-**Importante — por que não declaramos `icons` no `metadata` do `layout.tsx`:**
+**Como o favicon é declarado no projeto:**
 
-O Next.js App Router detecta automaticamente o `favicon.ico` dentro de `src/app/` e adiciona a tag correta no `<head>` da página. Se você *também* declarar `icons: { icon: "/favicon.ico" }` no objeto `metadata`, os dois entram em conflito e o favicon quebra em produção (bug conhecido e documentado no repositório do Next.js). A regra é: **arquivo em `src/app/` OU declaração no `metadata` — nunca os dois ao mesmo tempo.** O projeto usa apenas o arquivo.
+O favicon é declarado explicitamente via `metadata.icons` no `layout.tsx`, apontando para os arquivos em `public/`:
+
+```typescript
+icons: {
+  icon: [
+    { url: "/favicon.ico", sizes: "48x48", type: "image/x-icon" },
+    { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
+  ],
+  apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
+},
+```
+
+Essa é a abordagem mais confiável no Netlify. A alternativa (colocar `favicon.ico` em `src/app/` e deixar o Next.js detectar automaticamente) não funciona de forma consistente no Netlify porque arquivos não-código dentro de `src/app/` às vezes não chegam ao deploy corretamente. Os arquivos em `public/` sempre chegam.
 
 ---
 

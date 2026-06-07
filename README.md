@@ -1,6 +1,6 @@
-# Albergue São Vicente de Paula — Site Público
+# Albergue São Vicente de Paulo — Site Público
 
-Site público de transparência e divulgação do Albergue São Vicente de Paula.  
+Site público de transparência e divulgação do Albergue São Vicente de Paulo.  
 Projeto de extensão universitária — Bacharelado em Inteligência Artificial, UFJ.
 
 **Frente 3** do projeto de extensão (de 4 frentes no total).  
@@ -244,7 +244,7 @@ Toda a configuração fica no objeto `metadata` em `src/app/layout.tsx`:
 ```typescript
 metadataBase: new URL("https://albergue-sao-vicente.netlify.app"),
 openGraph: {
-  title: "Albergue São Vicente de Paula",
+  title: "Albergue São Vicente de Paulo",
   description: "...",
   images: [{ url: "/foto-hero.jpg", width: 1200, height: 630 }],
 }

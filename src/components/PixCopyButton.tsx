@@ -155,7 +155,7 @@ export default function PixCopyButton({ pixKey }: { pixKey: string }) {
               </h3>
               <p className="text-svp-brown text-sm leading-relaxed mb-6">
                 Cada contribuição chega diretamente aos nossos idosos — em forma de
-                alimento, cuidado e dignidade. O Albergue São Vicente de Paula agradece
+                alimento, cuidado e dignidade. O Albergue São Vicente de Paulo agradece
                 de coração.
               </p>
 

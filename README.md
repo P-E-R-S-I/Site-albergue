@@ -41,9 +41,13 @@ Site-albergue-main/
 │
 ├── public/                         # Arquivos estáticos servidos diretamente
 │   ├── logo.png                    # Logo do Albergue (usada no Header e Footer)
-│   ├── foto-hero.jpg               # Foto institucional — aparece no Hero e como poster do vídeo
+│   ├── foto-hero.jpg               # Foto institucional — aparece no Hero, como poster do vídeo e como imagem Open Graph
 │   ├── tour.mp4                    # Vídeo tour do Albergue (aparece abaixo dos botões do Hero)
 │   ├── qr-pix.png                  # QR Code Pix real do Albergue (página /como-doar)
+│   ├── favicon.ico                 # Favicon do site — gerado a partir da logo.png (16×16, 32×32, 48×48)
+│   ├── apple-icon.png              # Ícone para dispositivos Apple (180×180px)
+│   ├── icon-192.png                # Ícone para PWA/Android (192×192px)
+│   ├── icon-512.png                # Ícone para PWA/Android (512×512px)
 │   ├── insta-1.jpg                 # Foto 1 do carrossel Instagram
 │   ├── insta-2.jpg                 # Foto 2 do carrossel Instagram
 │   ├── insta-3.webp                # Foto 3 do carrossel Instagram
@@ -54,6 +58,9 @@ Site-albergue-main/
 ├── src/
 │   ├── app/                        # Páginas (Next.js App Router)
 │   │   ├── layout.tsx              # Layout raiz: importa globals.css, monta Header + Footer + ScrollAnimator
+│   │   │                           # Também define todos os metadados SEO e Open Graph do site
+│   │   ├── favicon.ico             # Favicon para o Next.js App Router (cópia do public/favicon.ico)
+│   │   ├── apple-icon.png          # Ícone Apple para o App Router (cópia do public/apple-icon.png)
 │   │   ├── globals.css             # Estilos globais, variáveis CSS, fontes, animações, classes customizadas
 │   │   ├── page.tsx                # Página inicial "/"
 │   │   ├── como-doar/
@@ -68,7 +75,10 @@ Site-albergue-main/
 │   │   ├── Footer.tsx              # Rodapé com CTA de doação, links de navegação e informações de contato
 │   │   ├── ScrollAnimator.tsx      # Componente cliente: anima elementos [data-animate] ao entrar na tela
 │   │   │                           # e controla a barra de progresso de scroll (#scroll-progress)
-│   │   ├── PixCopyButton.tsx       # Botão que copia a chave Pix para a área de transferência (com feedback visual)
+│   │   ├── PixCopyButton.tsx       # Botão que copia a chave Pix para a área de transferência. Ao copiar,
+│   │   │                           # exibe o Pop-up 1 ("Chave copiada!") com botão "Já fiz o Pix!".
+│   │   │                           # Ao clicar nesse botão, abre o Pop-up 2 (agradecimento completo) com
+│   │   │                           # estatísticas do Albergue e link para o painel de transparência
 │   │   ├── RealtimeRefresher.tsx   # Componente cliente: assina mudanças no Supabase e chama router.refresh()
 │   │   │                           # para atualizar dados sem reload — usado nas páginas dinâmicas
 │   │   ├── ZoomWordSection.tsx     # Seção de efeito parallax/zoom na palavra "Dignidade" ao rolar a página
@@ -204,6 +214,59 @@ O site tem vários efeitos já implementados e funcionando:
 | **Carrossel de fotos Instagram** | Grade de 3 colunas no desktop; carrossel com setas e dots no mobile | `InstagramCarrossel.tsx` |
 
 ---
+
+
+---
+
+## Favicon e Ícones
+
+O favicon do site é gerado a partir da `logo.png` do Albergue. Os arquivos ficam em dois lugares porque o Next.js App Router exige isso:
+
+| Arquivo | Localização | Uso |
+|---|---|---|
+| `favicon.ico` | `public/` e `src/app/` | Ícone na aba do navegador (16×16, 32×32, 48×48px) |
+| `apple-icon.png` | `public/` e `src/app/` | Ícone ao salvar o site na tela inicial do iPhone (180×180px) |
+| `icon-192.png` | `public/` | Ícone PWA para Android (192×192px) |
+| `icon-512.png` | `public/` | Ícone PWA para Android em alta resolução (512×512px) |
+
+> Se a logo do Albergue mudar, basta rodar o script Python usado na geração (`Pillow`) apontando para a nova logo e substituir esses arquivos.
+
+---
+
+## SEO e Open Graph
+
+**SEO** é o conjunto de configurações que fazem o site aparecer melhor no Google.
+
+**Open Graph** é o padrão que define como o site aparece quando alguém compartilha o link em redes sociais (WhatsApp, Instagram, Facebook, LinkedIn). Ao colar o link do site numa conversa, aparece automaticamente uma prévia com a foto do Albergue, título e descrição.
+
+Toda a configuração fica no objeto `metadata` em `src/app/layout.tsx`:
+
+```typescript
+metadataBase: new URL("https://albergue-sao-vicente.netlify.app"),
+openGraph: {
+  title: "Albergue São Vicente de Paula",
+  description: "...",
+  images: [{ url: "/foto-hero.jpg", width: 1200, height: 630 }],
+}
+```
+
+> **Importante:** se o domínio do site mudar (ex: domínio próprio), atualizar o `metadataBase` em `layout.tsx`. O Open Graph só funciona corretamente em produção (a Netlify serve os metadados; em `localhost` as redes sociais não conseguem acessar).
+
+---
+
+## Pop-up de Agradecimento Pós-Pix
+
+O site não consegue detectar automaticamente quando um Pix é concluído (isso exigiria integração com a API do banco, que é paga). A solução implementada usa o momento da cópia da chave como proxy:
+
+**Fluxo completo:**
+
+1. Doador clica no botão de copiar a chave Pix
+2. **Pop-up 1** aparece: "Chave copiada!" com instrução para abrir o app do banco + botão **"Já fiz o Pix!"**
+3. Se clicar em "Já fiz o Pix!", o Pop-up 1 fecha e o **Pop-up 2** abre
+4. **Pop-up 2** exibe agradecimento completo com: mensagem de impacto, 3 estatísticas do Albergue (78 idosos, 55 anos, 100% transparência) e link para o painel de transparência
+5. O doador pode fechar com o botão X (canto superior direito) ou com o botão "Fechar"
+
+Tudo isso está encapsulado no componente `src/components/PixCopyButton.tsx` — nenhuma outra parte do código precisa ser alterada.
 
 ## Como Rodar Localmente
 
@@ -363,10 +426,10 @@ Regras que devem ser seguidas por todos os colaboradores ao adicionar qualquer c
 
 ### Baixa prioridade (melhorias futuras)
 
-- [ ] **Google Maps embed** — o mapa já está na página inicial com coordenadas fixas (`-17.8624477, -51.718235`). Verificar se as coordenadas apontam para o local correto; se necessário, atualizar o `src` da `<iframe>` em `src/app/page.tsx`
-- [ ] **SEO e Open Graph** — o `layout.tsx` já tem metadados básicos; pode ser melhorado com uma imagem Open Graph real do Albergue (para aparecer ao compartilhar o link nas redes sociais)
-- [ ] **Favicon** — atualmente o projeto usa o favicon padrão do Next.js; substituir por um favicon baseado na logo do Albergue
-- [ ] **Página de agradecimento pós-doação** — não existe ainda; poderia ser uma rota `/obrigado` simples para redirecionar após Pix
+- [x] **Google Maps embed** — o mapa está na página inicial com coordenadas `-17.8624477, -51.718235`, confirmadas como corretas
+- [x] **SEO e Open Graph** — implementado no `layout.tsx` com título, descrição, palavras-chave, imagem Open Graph (`foto-hero.jpg` em 1200×630), Twitter Card e `metadataBase` apontando para o domínio do site. Ao compartilhar o link no WhatsApp, Instagram ou outra rede, aparece uma prévia com a foto e a descrição do Albergue
+- [x] **Favicon** — gerado a partir da `logo.png` do Albergue (arquivos `favicon.ico`, `apple-icon.png`, `icon-192.png`, `icon-512.png` em `/public/` e `/src/app/`)
+- [x] **Agradecimento pós-Pix** — implementado em dois pop-ups dentro do `PixCopyButton.tsx`: o primeiro aparece ao copiar a chave ("Chave copiada!") com botão "Já fiz o Pix!"; o segundo exibe um agradecimento completo com estatísticas do Albergue e link para o painel de transparência
 - [ ] **Permitir imagens do Supabase Storage** — se a Frente 1 armazenar imagens no Supabase, adicionar o hostname do Supabase em `next.config.ts` na lista de `remotePatterns`
 
 ---

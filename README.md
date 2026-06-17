@@ -27,7 +27,7 @@ Enquanto a Frente 1 não disponibiliza o banco de dados conectado, o site opera 
 | React                  | 19.x      | Biblioteca de interface                               |
 | TypeScript             | 5.x       | Tipagem estática em todo o projeto                    |
 | Tailwind CSS           | 3.4.x     | Estilização via classes utilitárias                   |
-| Recharts               | 2.13.x    | Gráficos de transparência (barras e linhas)           |
+| Recharts               | 2.13.x    | Gráficos de transparência (barras e áreas empilhadas) |
 | @supabase/supabase-js  | 2.47.x    | Cliente para consumir a API da Frente 1               |
 | Lucide React           | 0.468.x   | Ícones vetoriais                                      |
 | Netlify                | —         | Hospedagem (plano gratuito, via plugin Next.js)       |
@@ -41,13 +41,14 @@ Site-albergue-main/
 │
 ├── public/                         # Arquivos estáticos servidos diretamente
 │   ├── logo.png                    # Logo do Albergue (usada no Header e Footer)
-│   ├── foto-hero.jpg               # Foto institucional — aparece no Hero, como poster do vídeo e como imagem Open Graph
+│   ├── foto-hero.jpg               # Foto institucional — aparece no Hero e como poster do vídeo
+│   ├── og-image.jpg                # Imagem Open Graph (1200×630px) — aparece no preview do WhatsApp/Instagram
 │   ├── tour.mp4                    # Vídeo tour do Albergue (aparece abaixo dos botões do Hero)
 │   ├── qr-pix.png                  # QR Code Pix real do Albergue (página /como-doar)
-│   ├── favicon.ico                 # Favicon do site — gerado a partir da logo.png (16×16, 32×32, 48×48)
+│   ├── favicon.ico                 # Favicon do site (48×48px)
 │   ├── apple-icon.png              # Ícone para dispositivos Apple (180×180px)
 │   ├── icon-192.png                # Ícone para PWA/Android (192×192px)
-│   ├── icon-512.png                # Ícone para PWA/Android (512×512px)
+│   ├── icon-512.png                # Ícone para PWA/Android em alta resolução (512×512px)
 │   ├── insta-1.jpg                 # Foto 1 do carrossel Instagram
 │   ├── insta-2.jpg                 # Foto 2 do carrossel Instagram
 │   ├── insta-3.webp                # Foto 3 do carrossel Instagram
@@ -57,10 +58,8 @@ Site-albergue-main/
 │
 ├── src/
 │   ├── app/                        # Páginas (Next.js App Router)
-│   │   ├── layout.tsx              # Layout raiz: importa globals.css, monta Header + Footer + ScrollAnimator
-│   │   │                           # Também define todos os metadados SEO e Open Graph do site
-│   │   ├── favicon.ico             # Favicon para o Next.js App Router (cópia do public/favicon.ico)
-│   │   ├── apple-icon.png          # Ícone Apple para o App Router (cópia do public/apple-icon.png)
+│   │   ├── layout.tsx              # Layout raiz: importa globals.css, monta Header + Footer + ScrollAnimator.
+│   │   │                           # Define metadados SEO/OG base via buildMetadata() de src/lib/seo.ts
 │   │   ├── globals.css             # Estilos globais, variáveis CSS, fontes, animações, classes customizadas
 │   │   ├── page.tsx                # Página inicial "/"
 │   │   ├── como-doar/
@@ -75,35 +74,35 @@ Site-albergue-main/
 │   │   ├── Footer.tsx              # Rodapé com CTA de doação, links de navegação e informações de contato
 │   │   ├── ScrollAnimator.tsx      # Componente cliente: anima elementos [data-animate] ao entrar na tela
 │   │   │                           # e controla a barra de progresso de scroll (#scroll-progress)
-│   │   ├── PixCopyButton.tsx       # Botão que copia a chave Pix para a área de transferência. Ao copiar,
-│   │   │                           # exibe o Pop-up 1 ("Chave copiada!") com botão "Já fiz o Pix!".
-│   │   │                           # Ao clicar nesse botão, abre o Pop-up 2 (agradecimento completo) com
-│   │   │                           # estatísticas do Albergue e link para o painel de transparência
+│   │   ├── PixCopyButton.tsx       # Botão que copia a chave Pix. Exibe Pop-up 1 ("Chave copiada!")
+│   │   │                           # e Pop-up 2 (agradecimento completo com estatísticas do Albergue)
 │   │   ├── RealtimeRefresher.tsx   # Componente cliente: assina mudanças no Supabase e chama router.refresh()
 │   │   │                           # para atualizar dados sem reload — usado nas páginas dinâmicas
 │   │   ├── ZoomWordSection.tsx     # Seção de efeito parallax/zoom na palavra "Dignidade" ao rolar a página
 │   │   │
 │   │   ├── sections/               # Seções da página inicial (cada uma é um bloco visual independente)
-│   │   │   ├── Hero.tsx            # Seção Hero: título principal, botões CTA, vídeo tour, foto institucional
-│   │   │   │                       # e efeito parallax suave no fundo ao rolar
-│   │   │   ├── Estatisticas.tsx    # Seção com 4 contadores animados (idosos, voluntários, anos, famílias)
-│   │   │   ├── Missao.tsx          # Seção com texto da missão + 3 cards dos pilares (Cuidado, Transparência, Comunidade)
-│   │   │   ├── Depoimentos.tsx     # Carrossel automático de depoimentos (4 depoimentos, troca a cada 5s)
-│   │   │   ├── ComoAjudar.tsx      # Seção com 3 cards das formas de ajudar (dinheiro, itens, voluntariado)
-│   │   │   ├── InstagramCarrossel.tsx  # Carrossel de 6 fotos do Instagram — grade 3 colunas no desktop,
-│   │   │   │                           # carrossel com setas no mobile
-│   │   │   └── FAQAccordion.tsx    # Accordion de perguntas e respostas — recebe lista de FAQs como prop
+│   │   │   ├── Hero.tsx            # Seção Hero: título, botões CTA, vídeo tour, foto institucional, parallax
+│   │   │   ├── Estatisticas.tsx    # 4 contadores animados (idosos, voluntários, anos, famílias)
+│   │   │   ├── Missao.tsx          # Texto da missão + 3 cards dos pilares (Cuidado, Transparência, Comunidade)
+│   │   │   ├── Depoimentos.tsx     # Carrossel automático de depoimentos (troca a cada 5s)
+│   │   │   ├── ComoAjudar.tsx      # 3 cards das formas de ajudar (dinheiro, itens, voluntariado)
+│   │   │   ├── InstagramCarrossel.tsx  # Grade 3 colunas no desktop; carrossel com setas no mobile
+│   │   │   └── FAQAccordion.tsx    # Accordion de perguntas e respostas (recebe lista de FAQs como prop)
 │   │   │
 │   │   └── charts/                 # Gráficos Recharts — usados na página /transparencia
 │   │       ├── DoacoesChart.tsx    # Gráfico de barras: doações em dinheiro por mês (últimos 6 meses)
-│   │       ├── GastosChart.tsx     # Gráfico de barras empilhadas: gastos por categoria por mês
-│   │       └── EstoqueChart.tsx    # Gráfico de barras horizontais: nível de estoque atual por item
+│   │       ├── GastosChart.tsx     # Gráfico de área empilhada: gastos por categoria por mês
+│   │       └── EstoqueChart.tsx    # Barras de progresso: nível atual de cada item em estoque
 │   │
 │   └── lib/
-│       ├── supabase.ts             # Cliente Supabase + todas as funções de leitura de dados do banco
+│       ├── seo.ts                  # Função buildMetadata() — monta Open Graph + Twitter Card completos.
+│       │                           # Centraliza domínio, nome do site e imagem OG para evitar que páginas
+│       │                           # internas percam a imagem de compartilhamento (comportamento do Next.js
+│       │                           # App Router onde openGraph de página sobrescreve o do layout pai)
+│       ├── supabase.ts             # Cliente Supabase + todas as funções de leitura de dados do banco.
 │       │                           # Inclui fallback automático para placeholder se as variáveis de ambiente
 │       │                           # não estiverem configuradas (modo mock/desenvolvimento offline)
-│       └── dados-placeholder.ts    # Dados de exemplo usados enquanto o banco real não está conectado
+│       └── dados-placeholder.ts    # Dados de exemplo usados enquanto o banco real não está conectado.
 │                                   # Inclui: doações mensais, gastos, estoque, FAQs, estatísticas e
 │                                   # informações de contato do Albergue (endereço, telefone, Pix, etc.)
 │
@@ -124,23 +123,23 @@ Site-albergue-main/
 
 ### `/` — Página Inicial (`src/app/page.tsx`)
 
-A página principal do site. É composta pelas seguintes seções, de cima para baixo:
+Composta pelas seguintes seções, de cima para baixo:
 
-1. **Hero** — Título, parágrafo da missão, botões "Quero fazer uma doação" e "Ver transparência", vídeo tour do Albergue, foto institucional, e indicadores de impacto (78 idosos, 24 voluntários).
+1. **Hero** — Título, parágrafo da missão, botões "Quero fazer uma doação" e "Ver transparência", vídeo tour do Albergue, foto institucional, e indicadores de impacto.
 2. **Estatisticas** — 4 contadores animados com ícones.
 3. **Missao** — Texto descritivo + 3 cards dos pilares da instituição.
-4. **ZoomWordSection** — Efeito visual com a palavra "Dignidade" crescendo ao rolar a página (ocupa 250vh de altura).
+4. **ZoomWordSection** — Efeito visual com a palavra "Dignidade" crescendo ao rolar (ocupa 250vh de altura).
 5. **Depoimentos** — Carrossel automático com 4 depoimentos reais.
 6. **ComoAjudar** — Cards de doação em dinheiro, itens físicos e voluntariado.
 7. **InstagramCarrossel** — 6 fotos do perfil do Instagram, linkadas para o perfil.
-8. **Localização** — Texto com endereço, telefone e horário + mapa embutido do Google Maps.
+8. **Localização** — Endereço, telefone e horário + mapa embutido do Google Maps.
 9. **Faixa CTA final** — Chamada para ação com links para /como-doar e /transparencia.
 
 ---
 
 ### `/como-doar` — Como Doar (`src/app/como-doar/page.tsx`)
 
-Página com renderização dinâmica (`force-dynamic`) — não é cacheada para sempre refletir o estoque atual.
+Renderização dinâmica (`force-dynamic`) — não é cacheada para sempre refletir o estoque atual.
 
 - **Coluna 1 — Doação em dinheiro:** QR Code Pix, botão de copiar chave Pix (CNPJ), e dados bancários para depósito (Sicoob agência 5014, conta 6696).
 - **Coluna 2 — Itens físicos:** Lista dos itens mais necessários no momento (buscada do Supabase via `getItensNecessarios()`), com badge "urgente" para itens abaixo do estoque mínimo. Inclui endereço e horário do ponto de coleta.
@@ -150,25 +149,25 @@ Página com renderização dinâmica (`force-dynamic`) — não é cacheada para
 
 ### `/transparencia` — Transparência (`src/app/transparencia/page.tsx`)
 
-Página com renderização dinâmica (`force-dynamic`).
+Renderização dinâmica (`force-dynamic`).
 
 - **4 cards de resumo do mês:** Doações em dinheiro, Gastos totais, Saldo do mês, Itens recebidos.
 - **Gráfico de Doações** (`DoacoesChart`) — barras dos últimos 6 meses.
-- **Gráfico de Gastos** (`GastosChart`) — barras empilhadas por categoria (alimentação, higiene, medicamentos, utilidades, manutenção).
-- **Gráfico de Estoque** (`EstoqueChart`) — barras horizontais mostrando nível atual de cada item.
+- **Gráfico de Gastos** (`GastosChart`) — área empilhada por categoria (alimentação, higiene, medicamentos, utilidades, manutenção).
+- **Gráfico de Estoque** (`EstoqueChart`) — barras de progresso mostrando nível atual de cada item.
 - **Seção explicativa** sobre como funciona o sistema de registro (banco de dados ledger).
-- Banner amarelo quando em modo mock (sem Supabase), ou banner verde quando conectado ao banco real.
+- Banner amarelo quando em modo mock, banner verde quando conectado ao banco real.
 - Contém `<RealtimeRefresher />` para atualizar os dados ao vivo.
 
 ---
 
 ### `/faq` — Perguntas Frequentes (`src/app/faq/page.tsx`)
 
-Página com renderização dinâmica (`force-dynamic`).
+Renderização dinâmica (`force-dynamic`).
 
-- Accordion de perguntas e respostas, carregadas do Supabase via `getFaqs()` (ou do placeholder se não houver banco).
-- Atualmente há 7 perguntas no placeholder cobrindo: horários, o que doar, como fazer Pix, voluntariado, vagas, acompanhamento médico e como acompanhar o uso das doações.
-- Card de CTA no final para falar com a equipe pelo WhatsApp caso a dúvida não esteja listada.
+- Accordion de perguntas e respostas, carregadas do Supabase via `getFaqs()` (ou do placeholder).
+- 7 perguntas no placeholder: horários, o que doar, como fazer Pix, voluntariado, vagas, acompanhamento médico e como acompanhar o uso das doações.
+- Card de CTA no final para falar com a equipe pelo WhatsApp.
 
 ---
 
@@ -176,113 +175,115 @@ Página com renderização dinâmica (`force-dynamic`).
 
 A paleta de cores está definida no `tailwind.config.ts` com o prefixo `svp-`:
 
-| Token Tailwind  | Valor hex   | Uso                                       |
-|-----------------|-------------|-------------------------------------------|
-| `svp-cream`     | `#F6EFE3`   | Fundo principal quente                    |
-| `svp-linen`     | `#EDE4D3`   | Fundo de seções alternadas / cards        |
-| `svp-sienna`    | `#803320`   | Cor primária — terracota escuro           |
-| `svp-rose`      | `#A8492D`   | Terracota claro — hover da cor primária   |
-| `svp-forest`    | `#2D5A27`   | Cor secundária — verde floresta           |
-| `svp-sage`      | `#4A7E43`   | Verde claro — hover da cor secundária     |
-| `svp-amber`     | `#B8892A`   | Destaque — dourado âmbar                  |
-| `svp-dark`      | `#18120B`   | Quase-preto quente (fundos escuros, texto)|
-| `svp-brown`     | `#4A3728`   | Marrom médio (texto de parágrafos)        |
-| `svp-muted`     | `#8A7464`   | Texto secundário / legendas               |
-| `svp-border`    | `#D9CEBD`   | Bordas suaves                             |
+| Token Tailwind  | Valor hex   | Uso                                        |
+|-----------------|-------------|--------------------------------------------|
+| `svp-cream`     | `#F6EFE3`   | Fundo principal quente                     |
+| `svp-linen`     | `#EDE4D3`   | Fundo de seções alternadas / cards         |
+| `svp-sienna`    | `#803320`   | Cor primária — terracota escuro            |
+| `svp-rose`      | `#A8492D`   | Terracota claro — hover da cor primária    |
+| `svp-forest`    | `#2D5A27`   | Cor secundária — verde floresta            |
+| `svp-sage`      | `#4A7E43`   | Verde claro — hover da cor secundária      |
+| `svp-amber`     | `#B8892A`   | Destaque — dourado âmbar                   |
+| `svp-dark`      | `#18120B`   | Quase-preto quente (fundos escuros, texto) |
+| `svp-brown`     | `#4A3728`   | Marrom médio (texto de parágrafos)         |
+| `svp-muted`     | `#8A7464`   | Texto secundário / legendas                |
+| `svp-border`    | `#D9CEBD`   | Bordas suaves                              |
+
+> **Importante:** o Tailwind v3 só gera classes de opacidade em múltiplos de 5 (ex: `/5`, `/10`, `/20`…). Não usar valores como `/3` ou `/6` — eles não geram CSS e o efeito simplesmente não aparece.
 
 **Fontes:**
 - **Lora** (serif) — títulos, citações e textos de destaque (`font-display`)
 - **Plus Jakarta Sans** (sans-serif) — corpo de texto, botões, labels (`font-body`)
 
-Ambas as fontes são carregadas via Google Fonts no `globals.css`.
+Ambas são carregadas via Google Fonts no `globals.css`.
 
 ---
 
 ## Animações e Efeitos Visuais
 
-O site tem vários efeitos já implementados e funcionando:
-
 | Efeito | Como funciona | Onde é usado |
 |---|---|---|
-| **Fade-up ao rolar** | Elementos com atributo `data-animate` começam invisíveis e surgem ao entrar na viewport. Controlado pelo `ScrollAnimator.tsx` via `IntersectionObserver`. | Em praticamente todas as seções |
-| **Atraso escalonado** | `data-delay="1"` a `data-delay="5"` adicionam delay de 0.1s a 0.5s nas transições | Grupos de elementos em sequência |
-| **Barra de progresso de scroll** | Div com `id="scroll-progress"` no topo da tela cresce conforme o usuário rola | Toda a aplicação (via `ScrollAnimator`) |
-| **Parallax no Hero** | O fundo do Hero se move a 30% da velocidade de scroll via `useEffect` + `transform: translateY` | `Hero.tsx` |
-| **Zoom ao rolar ("Dignidade")** | A palavra cresce de 56px a 160px conforme o usuário avança pela seção (sticky de 250vh) | `ZoomWordSection.tsx` |
-| **Contador animado** | Números "contam" do zero até o valor real ao entrar na viewport | `Estatisticas.tsx` |
+| **Fade-up ao rolar** | Elementos com `data-animate` começam invisíveis e surgem ao entrar na viewport via `IntersectionObserver` | Praticamente todas as seções |
+| **Atraso escalonado** | `data-delay="1"` a `data-delay="5"` adicionam delay de 0.1s a 0.5s | Grupos de elementos em sequência |
+| **Barra de progresso de scroll** | Div `#scroll-progress` no topo cresce conforme o usuário rola | Toda a aplicação (via `ScrollAnimator`) |
+| **Parallax no Hero** | O fundo se move a 30% da velocidade de scroll via `transform: translateY` | `Hero.tsx` |
+| **Zoom ao rolar ("Dignidade")** | A palavra cresce de 56px a 160px numa seção sticky de 250vh | `ZoomWordSection.tsx` |
+| **Contador animado** | Números contam do zero ao valor real ao entrar na viewport | `Estatisticas.tsx` |
 | **Carrossel de depoimentos** | Troca automaticamente a cada 5 segundos, com dots de navegação clicáveis | `Depoimentos.tsx` |
-| **Carrossel de fotos Instagram** | Grade de 3 colunas no desktop; carrossel com setas e dots no mobile | `InstagramCarrossel.tsx` |
-
----
-
-
----
-
-## Favicon e Ícones
-
-O favicon do site é gerado a partir da `logo.png` do Albergue. Os arquivos ficam em dois lugares porque o Next.js App Router exige isso:
-
-| Arquivo | Localização | Uso |
-|---|---|---|
-| `favicon.ico` | `public/` e `src/app/` | Ícone na aba do navegador (16×16, 32×32, 48×48px) |
-| `apple-icon.png` | `public/` e `src/app/` | Ícone ao salvar o site na tela inicial do iPhone (180×180px) |
-| `icon-192.png` | `public/` | Ícone PWA para Android (192×192px) |
-| `icon-512.png` | `public/` | Ícone PWA para Android em alta resolução (512×512px) |
-
-> Se a logo do Albergue mudar, basta rodar o script Python usado na geração (`Pillow`) apontando para a nova logo e substituir esses arquivos.
-
-**Como o favicon é declarado no projeto:**
-
-O favicon é declarado explicitamente via `metadata.icons` no `layout.tsx`, apontando para os arquivos em `public/`:
-
-```typescript
-icons: {
-  icon: [
-    { url: "/favicon.ico", sizes: "48x48", type: "image/x-icon" },
-    { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
-  ],
-  apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
-},
-```
-
-Essa é a abordagem mais confiável no Netlify. A alternativa (colocar `favicon.ico` em `src/app/` e deixar o Next.js detectar automaticamente) não funciona de forma consistente no Netlify porque arquivos não-código dentro de `src/app/` às vezes não chegam ao deploy corretamente. Os arquivos em `public/` sempre chegam.
+| **Carrossel Instagram** | Grade 3 colunas no desktop; carrossel com setas e dots no mobile | `InstagramCarrossel.tsx` |
 
 ---
 
 ## SEO e Open Graph
 
-**SEO** é o conjunto de configurações que fazem o site aparecer melhor no Google.
+**SEO** são as configurações que fazem o site aparecer bem no Google.
 
-**Open Graph** é o padrão que define como o site aparece quando alguém compartilha o link em redes sociais (WhatsApp, Instagram, Facebook, LinkedIn). Ao colar o link do site numa conversa, aparece automaticamente uma prévia com a foto do Albergue, título e descrição.
+**Open Graph** define o preview que aparece ao compartilhar o link em redes sociais — a foto, o título e a descrição que surgem automaticamente no WhatsApp, Instagram, etc.
 
-Toda a configuração fica no objeto `metadata` em `src/app/layout.tsx`:
+### Como está organizado
+
+Toda a lógica de SEO/OG foi centralizada em `src/lib/seo.ts` via a função `buildMetadata()`. **Isso é necessário** porque no Next.js App Router, se uma página define seu próprio campo `openGraph`, ele **substitui por completo** o do layout pai em vez de se mesclar. Sem esse helper, qualquer página interna perderia a imagem de compartilhamento.
 
 ```typescript
-metadataBase: new URL("https://albergue-sao-vicente.netlify.app"),
-openGraph: {
-  title: "Albergue São Vicente de Paulo",
-  description: "...",
-  images: [{ url: "/foto-hero.jpg", width: 1200, height: 630 }],
-}
+// src/lib/seo.ts
+export const SITE_URL = "https://site-albergue-sao-vincente.netlify.app";
+export const SITE_NAME = "Albergue São Vicente de Paulo";
+
+export const DEFAULT_OG_IMAGE = {
+  url: "/og-image.jpg",
+  width: 1200,
+  height: 630,
+  alt: "Voluntários do Albergue São Vicente de Paulo organizando cestas de doação",
+};
 ```
 
-> **Importante:** se o domínio do site mudar (ex: domínio próprio), atualizar o `metadataBase` em `layout.tsx`. O Open Graph só funciona corretamente em produção (a Netlify serve os metadados; em `localhost` as redes sociais não conseguem acessar).
+Cada página chama `buildMetadata()` com seu próprio título e descrição:
+
+```typescript
+// Exemplo: src/app/como-doar/page.tsx
+export const metadata: Metadata = buildMetadata({
+  title: "Como Doar",
+  description: "Saiba como fazer uma doação...",
+  path: "/como-doar",
+});
+```
+
+### A imagem Open Graph
+
+A imagem `public/og-image.jpg` foi recortada das fotos institucionais do Albergue em **exatamente 1200×630px** — a proporção recomendada pelo protocolo Open Graph. Declarar dimensões que não batem com o arquivo real é a causa mais comum do preview não aparecer no WhatsApp.
+
+> Se o domínio do site mudar (ex: domínio próprio), atualizar apenas a constante `SITE_URL` em `src/lib/seo.ts`. Todos os metadados do site atualizam automaticamente.
+
+---
+
+## Favicon e Ícones
+
+Os ícones ficam **somente em `public/`** e são declarados via `metadata.icons` no `layout.tsx`:
+
+| Arquivo | Localização | Uso |
+|---|---|---|
+| `favicon.ico` | `public/` | Ícone na aba do navegador (48×48px) |
+| `apple-icon.png` | `public/` | Ícone ao salvar na tela inicial do iPhone (180×180px) |
+| `icon-192.png` | `public/` | Ícone PWA para Android (192×192px) |
+| `icon-512.png` | `public/` | Ícone PWA em alta resolução (512×512px) |
+
+> **Atenção:** Não colocar `favicon.ico` ou `apple-icon.png` dentro de `src/app/`. O Next.js App Router trata arquivos com esses nomes nessa pasta como "metadata especial" e gera suas próprias tags `<link>`, sobrescrevendo a declaração `metadata.icons` do `layout.tsx`. Os arquivos em `public/` sempre chegam ao deploy do Netlify.
+
+Se a logo do Albergue mudar, regenerar os ícones com Pillow (Python) apontando para a nova logo e substituir os arquivos em `public/`.
 
 ---
 
 ## Pop-up de Agradecimento Pós-Pix
 
-O site não consegue detectar automaticamente quando um Pix é concluído (isso exigiria integração com a API do banco, que é paga). A solução implementada usa o momento da cópia da chave como proxy:
+O site não detecta automaticamente quando um Pix é concluído (exigiria integração paga com a API do banco). A solução usa o momento da cópia da chave como proxy:
 
-**Fluxo completo:**
+1. Doador clica em copiar a chave Pix
+2. **Pop-up 1** — "Chave copiada!" com instrução para abrir o app do banco + botão **"Já fiz o Pix!"**
+3. Ao clicar em "Já fiz o Pix!", o **Pop-up 2** abre com agradecimento completo, 3 estatísticas do Albergue e link para o painel de transparência
 
-1. Doador clica no botão de copiar a chave Pix
-2. **Pop-up 1** aparece: "Chave copiada!" com instrução para abrir o app do banco + botão **"Já fiz o Pix!"**
-3. Se clicar em "Já fiz o Pix!", o Pop-up 1 fecha e o **Pop-up 2** abre
-4. **Pop-up 2** exibe agradecimento completo com: mensagem de impacto, 3 estatísticas do Albergue (78 idosos, 55 anos, 100% transparência) e link para o painel de transparência
-5. O doador pode fechar com o botão X (canto superior direito) ou com o botão "Fechar"
+Tudo encapsulado em `src/components/PixCopyButton.tsx`.
 
-Tudo isso está encapsulado no componente `src/components/PixCopyButton.tsx` — nenhuma outra parte do código precisa ser alterada.
+---
 
 ## Como Rodar Localmente
 
@@ -293,7 +294,7 @@ Tudo isso está encapsulado no componente `src/components/PixCopyButton.tsx` —
 ### Passo a passo
 
 ```bash
-# 1. Clone ou baixe o projeto e entre na pasta
+# 1. Entre na pasta do projeto
 cd Site-albergue-main
 
 # 2. Instale as dependências
@@ -302,7 +303,7 @@ npm install
 # 3. Configure as variáveis de ambiente
 cp .env.local.example .env.local
 # Edite o .env.local com as chaves do Supabase (fornecidas pela Frente 1)
-# Se não tiver as chaves ainda, pode deixar em branco — o site roda em modo placeholder
+# Se não tiver as chaves, deixe em branco — o site roda em modo placeholder
 
 # 4. Inicie o servidor de desenvolvimento
 npm run dev
@@ -310,7 +311,7 @@ npm run dev
 
 Acesse: **http://localhost:3000**
 
-> **Modo placeholder (sem Supabase):** Se o `.env.local` não tiver as variáveis `NEXT_PUBLIC_SUPABASE_URL` e `NEXT_PUBLIC_SUPABASE_ANON_KEY` preenchidas, o site detecta isso automaticamente e usa os dados do arquivo `dados-placeholder.ts`. A página `/transparencia` exibe um banner amarelo avisando que são dados de demonstração.
+> **Modo placeholder (sem Supabase):** Se o `.env.local` não tiver as variáveis `NEXT_PUBLIC_SUPABASE_URL` e `NEXT_PUBLIC_SUPABASE_ANON_KEY`, o site usa os dados de `dados-placeholder.ts`. A página `/transparencia` exibe um banner amarelo avisando que são dados de demonstração.
 
 ### Build para produção
 
@@ -323,35 +324,32 @@ npm run start
 
 ## Deploy na Netlify
 
-O projeto já está configurado para deploy automático na Netlify via `netlify.toml`.
+O projeto já está configurado para deploy automático via `netlify.toml`.
 
 ### Passos para subir pela primeira vez
 
 1. Faça push do código para um repositório no GitHub
-2. Acesse [netlify.com](https://netlify.com) e faça login
-3. Clique em **"Add new site" → "Import an existing project"**
-4. Conecte ao GitHub e selecione o repositório
-5. As configurações de build são detectadas automaticamente pelo `netlify.toml`:
+2. Acesse [netlify.com](https://netlify.com) → **"Add new site" → "Import an existing project"**
+3. Conecte ao GitHub e selecione o repositório
+4. As configurações de build são detectadas automaticamente pelo `netlify.toml`:
    - **Build command:** `npm run build`
    - **Publish directory:** `.next`
-6. Vá em **Site configuration → Environment variables** e adicione:
+5. Vá em **Site configuration → Environment variables** e adicione:
    ```
    NEXT_PUBLIC_SUPABASE_URL=<URL fornecida pela Frente 1>
    NEXT_PUBLIC_SUPABASE_ANON_KEY=<chave anon fornecida pela Frente 1>
    ```
-7. Clique em **Deploy site**
+6. Clique em **Deploy site**
 
-> **Atenção:** Sem as variáveis de ambiente configuradas no painel da Netlify, o site em produção também rodará em modo placeholder. Isso não quebra nada, mas os dados serão fictícios.
+> Sem as variáveis configuradas, o site em produção também rodará em modo placeholder — não quebra nada, mas os dados serão fictícios.
 
-### Redeploys automáticos
-
-Após a configuração inicial, qualquer push para a branch principal do repositório dispara um redeploy automático na Netlify.
+Após a configuração inicial, qualquer push para a branch principal dispara um redeploy automático.
 
 ---
 
 ## Integração com o Supabase (Frente 1)
 
-### Como funciona o modo mock/placeholder
+### Modo mock/placeholder
 
 O arquivo `src/lib/supabase.ts` exporta a constante `USE_MOCK`:
 
@@ -360,11 +358,11 @@ export const USE_MOCK =
   process.env.NEXT_PUBLIC_USE_MOCK === "true" || !supabaseUrl || !supabaseAnonKey;
 ```
 
-Se `USE_MOCK` for `true`, cada função de dados importa os dados do `dados-placeholder.ts` em vez de consultar o banco. Isso permite desenvolver e testar o site sem depender da Frente 1.
+Se `USE_MOCK` for `true`, todas as funções de dados importam de `dados-placeholder.ts` em vez de consultar o banco.
 
 ### Funções disponíveis em `supabase.ts`
 
-| Função | Tabela/View consultada | O que retorna |
+| Função | View/Tabela consultada | O que retorna |
 |---|---|---|
 | `getEstoqueAtual()` | `view_estoque_atual` | Lista de itens com quantidade atual e mínima |
 | `getDoacoesMensais()` | `view_doacoes_mensais` | Doações dos últimos 6 meses (dinheiro + itens) |
@@ -376,27 +374,26 @@ Todas as funções têm fallback automático para placeholder em caso de erro no
 
 ### Atualização em tempo real
 
-O componente `RealtimeRefresher.tsx` escuta mudanças nas tabelas `eventos_financeiro` e `eventos_estoque` via Supabase Realtime. Quando algo muda, ele dispara um `router.refresh()` com debounce de 800ms — o que força o Next.js a buscar novos dados do servidor sem recarregar a página. Está ativo nas páginas `/como-doar` e `/transparencia`.
+O `RealtimeRefresher.tsx` escuta mudanças nas tabelas `eventos_financeiro` e `eventos_estoque` via Supabase Realtime. Quando algo muda, dispara `router.refresh()` com debounce de 800ms — o Next.js busca novos dados do servidor sem recarregar a página. Ativo em `/como-doar` e `/transparencia`.
 
-### Variáveis de ambiente necessárias
+### Variáveis de ambiente
 
 ```env
+# Obrigatórias para conectar ao banco real
 NEXT_PUBLIC_SUPABASE_URL=https://xxxxxxxxxxxxxxxx.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...
-```
 
-Opcional:
-```env
-NEXT_PUBLIC_USE_MOCK=true   # Força modo placeholder mesmo com Supabase configurado
+# Opcional — força modo placeholder mesmo com Supabase configurado
+NEXT_PUBLIC_USE_MOCK=true
 ```
 
 ---
 
-## Dados de Contato do Albergue (no código)
+## Dados de Contato do Albergue
 
-Todos os dados de contato estão centralizados em `src/lib/dados-placeholder.ts` na constante `PLACEHOLDER_INFO_ALBERGUE`. Quando esses dados forem atualizados para os valores reais, basta editar apenas esse arquivo e todos os lugares do site atualizam automaticamente.
+Todos os dados de contato estão centralizados em `src/lib/dados-placeholder.ts` na constante `PLACEHOLDER_INFO_ALBERGUE`. Editar apenas esse arquivo atualiza o site inteiro.
 
-| Campo | Valor atual (placeholder/real) |
+| Campo | Valor atual |
 |---|---|
 | Endereço | Sit Betânia, 1, Zona Rural — Jataí, GO, 75800-000 |
 | Telefone | (64) 99983-9893 |
@@ -408,64 +405,66 @@ Todos os dados de contato estão centralizados em `src/lib/dados-placeholder.ts`
 | Horário de doações | Seg–Sex: 8h às 11h e 13h às 17h |
 | Instagram | @vicentedepaulodejatai |
 
-> **Nota:** O QR Code Pix (`/public/qr-pix.png`) e o vídeo tour (`/public/tour.mp4`) já são arquivos reais — foram fornecidos pelo Albergue e já estão incluídos no projeto.
+> O QR Code Pix (`public/qr-pix.png`) e o vídeo tour (`public/tour.mp4`) já são arquivos reais fornecidos pelo Albergue.
 
 ---
 
-## Restrições Éticas (definidas no levantamento com a instituição)
+## Restrições Éticas
 
-Regras que devem ser seguidas por todos os colaboradores ao adicionar qualquer conteúdo visual ou textual ao site:
+Regras para todos os colaboradores ao adicionar qualquer conteúdo ao site:
 
 - ❌ **Nunca** exibir foto de idoso sozinho identificável
 - ❌ **Nunca** exibir dados pessoais de residentes (nomes, históricos, condições de saúde)
 - ✅ Fotos somente com voluntários, equipe ou grupos sem identificação individual dos residentes
-- ✅ Dados de estoque: mostrar apenas quantidades, nunca nomes de pessoas
-- ✅ Transparência financeira: valores agregados por mês/categoria, nunca transações individuais com nomes
+- ✅ Estoque: mostrar apenas quantidades, nunca nomes de pessoas
+- ✅ Financeiro: valores agregados por mês/categoria, nunca transações individuais com nomes
 
 ---
 
-## To-do — O que ainda falta fazer
+## To-do
 
-### Alta prioridade (necessário para o site estar 100% com dados reais)
+### Alta prioridade
 
-- [ ] **Conectar ao Supabase real** — adicionar as variáveis `NEXT_PUBLIC_SUPABASE_URL` e `NEXT_PUBLIC_SUPABASE_ANON_KEY` no painel da Netlify (a URL e a chave anon já estão no `.env.local.example` — conferir se estão corretas com a Frente 1)
-- [ ] **Confirmar que as views do Supabase existem** — o código depende de `view_estoque_atual`, `view_doacoes_mensais`, `view_gastos_mensais`, `view_itens_necessarios` e a tabela `faqs`. A Frente 1 precisa confirmar que essas views estão criadas e com dados
-- [ ] **Atualizar link do WhatsApp real** — substituir o número em `PLACEHOLDER_INFO_ALBERGUE.whatsapp` pelo número oficial do Albergue, se ainda não for o correto
+- [ ] **Conectar ao Supabase real** — adicionar `NEXT_PUBLIC_SUPABASE_URL` e `NEXT_PUBLIC_SUPABASE_ANON_KEY` no painel da Netlify
+- [ ] **Confirmar views do Supabase** — o código depende de `view_estoque_atual`, `view_doacoes_mensais`, `view_gastos_mensais`, `view_itens_necessarios` e da tabela `faqs`. A Frente 1 precisa confirmar que estão criadas e populadas
 - [ ] **Validar dados de contato** — confirmar com o Albergue se endereço, telefone, e-mail e horários estão corretos
+- [ ] **Rotacionar a chave Supabase** — a `ANON_KEY` no `.env.local.example` parece ser uma chave real. Regenerar no painel do Supabase e não versionar chaves reais
 
-### Média prioridade (melhoria do conteúdo)
+### Média prioridade
 
-- [ ] **Atualizar fotos do carrossel Instagram** — as 6 fotos atuais (`insta-1` a `insta-6`) são fotos reais mas podem ser atualizadas com fotos mais recentes do Instagram do Albergue. Substituir os arquivos em `/public/` mantendo os mesmos nomes, ou adicionar novos e editar a lista `FOTOS` em `InstagramCarrossel.tsx`
-- [ ] **Atualizar os depoimentos** — os 4 depoimentos em `Depoimentos.tsx` (na constante `DEPOIMENTOS`) são baseados em comentários reais, mas podem ser revisados ou expandidos
-- [ ] **Atualizar estatísticas** — os números em `PLACEHOLDER_ESTATISTICAS` (78 idosos, 100+ voluntários, 55 anos, 78 famílias) em `dados-placeholder.ts` devem ser confirmados com o Albergue
-- [ ] **Revisar as FAQs** — conferir se as 7 perguntas em `PLACEHOLDER_FAQ` estão atualizadas e corretas; quando o Supabase for conectado, as FAQs virão do banco e poderão ser editadas lá
+- [ ] **Atualizar fotos do carrossel Instagram** — substituir os arquivos `insta-1` a `insta-6` em `public/` por fotos mais recentes, ou adicionar novos e editar o array `FOTOS` em `InstagramCarrossel.tsx`
+- [ ] **Revisar depoimentos** — a constante `DEPOIMENTOS` em `Depoimentos.tsx` pode ser expandida
+- [ ] **Confirmar estatísticas** — os números em `PLACEHOLDER_ESTATISTICAS` (78 idosos, 100+ voluntários, 55 anos) devem ser validados com o Albergue
 
-### Baixa prioridade (melhorias futuras)
+### Concluído
 
-- [x] **Google Maps embed** — o mapa está na página inicial com coordenadas `-17.8624477, -51.718235`, confirmadas como corretas
-- [x] **SEO e Open Graph** — implementado no `layout.tsx` com título, descrição, palavras-chave, imagem Open Graph (`foto-hero.jpg` em 1200×630), Twitter Card e `metadataBase` apontando para o domínio do site. Ao compartilhar o link no WhatsApp, Instagram ou outra rede, aparece uma prévia com a foto e a descrição do Albergue
-- [x] **Favicon** — gerado a partir da `logo.png` do Albergue (arquivos `favicon.ico`, `apple-icon.png`, `icon-192.png`, `icon-512.png` em `/public/` e `/src/app/`)
-- [x] **Agradecimento pós-Pix** — implementado em dois pop-ups dentro do `PixCopyButton.tsx`: o primeiro aparece ao copiar a chave ("Chave copiada!") com botão "Já fiz o Pix!"; o segundo exibe um agradecimento completo com estatísticas do Albergue e link para o painel de transparência
-- [ ] **Permitir imagens do Supabase Storage** — se a Frente 1 armazenar imagens no Supabase, adicionar o hostname do Supabase em `next.config.ts` na lista de `remotePatterns`
+- [x] **SEO e Open Graph** — centralizado em `src/lib/seo.ts` com `buildMetadata()`. Domínio correto (`site-albergue-sao-vincente.netlify.app`), imagem `og-image.jpg` em 1200×630px real, Open Graph e Twitter Card completos em todas as 4 rotas
+- [x] **Favicon** — arquivos em `public/` declarados via `metadata.icons` no `layout.tsx`; duplicatas removidas de `src/app/` para evitar conflito com o App Router
+- [x] **Agradecimento pós-Pix** — dois pop-ups em `PixCopyButton.tsx`
+- [x] **Google Maps** — mapa embutido na página inicial com coordenadas confirmadas
+- [x] **Correção de classes Tailwind inválidas** — substituídas opacidades `/3` e `/6` por `/5` nos componentes `FAQAccordion.tsx` e `Hero.tsx`
 
 ---
 
 ## Perguntas Frequentes para Colaboradores
 
 **P: Adicionei um componente novo mas ele não aparece na página. O que pode ser?**  
-R: Verifique se ele foi importado e usado em `src/app/page.tsx` (para a página inicial) ou na página correspondente em `src/app/`. O Next.js App Router não inclui componentes automaticamente — é necessário importar explicitamente.
+R: Verifique se ele foi importado e usado em `src/app/page.tsx` (página inicial) ou na página correspondente. O Next.js App Router não inclui componentes automaticamente.
 
 **P: Quero adicionar uma nova página (ex: `/sobre`). Como faço?**  
-R: Crie uma pasta com o nome da rota dentro de `src/app/` e adicione um arquivo `page.tsx` dentro dela. Exemplo: `src/app/sobre/page.tsx` cria a rota `/sobre`. Em seguida, adicione o link de navegação em `Header.tsx` (array `NAV_LINKS`) e no `Footer.tsx`.
+R: Crie `src/app/sobre/page.tsx`. Em seguida, adicione o link no array `NAV_LINKS` em `Header.tsx` e no `Footer.tsx`.
 
-**P: Onde edito o que aparece no rodapé e no cabeçalho?**  
-R: Cabeçalho → `src/components/Header.tsx`. Rodapé → `src/components/Footer.tsx`. Os dados de contato (endereço, telefone, WhatsApp) vêm de `src/lib/dados-placeholder.ts`.
+**P: Onde edito cabeçalho e rodapé?**  
+R: `src/components/Header.tsx` e `src/components/Footer.tsx`. Dados de contato vêm de `src/lib/dados-placeholder.ts`.
 
 **P: O site está mostrando dados falsos. Como conecto ao banco real?**  
-R: Configure as variáveis `NEXT_PUBLIC_SUPABASE_URL` e `NEXT_PUBLIC_SUPABASE_ANON_KEY` no seu `.env.local` (desenvolvimento) ou no painel da Netlify (produção). O site detecta automaticamente e usa o banco quando as variáveis estão presentes.
+R: Configure `NEXT_PUBLIC_SUPABASE_URL` e `NEXT_PUBLIC_SUPABASE_ANON_KEY` no `.env.local` (dev) ou no painel da Netlify (produção).
 
 **P: Como adiciono mais fotos ao carrossel do Instagram?**  
-R: Coloque as fotos na pasta `public/` (ex: `insta-7.webp`) e adicione um objeto no array `FOTOS` dentro de `src/components/sections/InstagramCarrossel.tsx` seguindo o mesmo padrão dos já existentes.
+R: Coloque a foto em `public/` (ex: `insta-7.webp`) e adicione um objeto no array `FOTOS` em `InstagramCarrossel.tsx`.
 
-**P: Posso usar cores que não estão na paleta SVP?**  
-R: Evite. A paleta está definida para manter consistência visual. Se for absolutamente necessário adicionar uma cor nova, adicione-a no `tailwind.config.ts` com o prefixo `svp-` e documente aqui.
+**P: Posso usar cores fora da paleta SVP?**  
+R: Evite. Se for necessário adicionar uma cor nova, inclua-a no `tailwind.config.ts` com prefixo `svp-` e documente aqui.
+
+**P: Como atualizo o domínio se o site ganhar um domínio próprio?**  
+R: Edite apenas a constante `SITE_URL` em `src/lib/seo.ts`. Todos os metadados (Open Graph, canonical URL, Twitter Card) atualizam automaticamente.

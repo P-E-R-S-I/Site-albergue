@@ -8,7 +8,7 @@ function FAQItem({ pergunta, resposta }: { pergunta: string; resposta: string })
   const [open, setOpen] = useState(false);
   return (
     <div
-      className={`border rounded-2xl overflow-hidden transition-colors ${open ? "border-svp-sienna/40 bg-svp-sienna/3" : "border-svp-border bg-white"}`}
+      className={`border rounded-2xl overflow-hidden transition-colors ${open ? "border-svp-sienna/40 bg-svp-sienna/5" : "border-svp-border bg-white"}`}
     >
       <button
         onClick={() => setOpen(!open)}

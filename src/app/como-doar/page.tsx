@@ -5,12 +5,14 @@ import { getItensNecessarios } from "@/lib/supabase";
 import RealtimeRefresher from "@/components/RealtimeRefresher";
 import Image from "next/image";
 import PixCopyButton from "@/components/PixCopyButton";
+import { buildMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildMetadata({
   title: "Como Doar",
   description:
     "Saiba como fazer uma doação para o Albergue São Vicente de Paulo — Pix, itens físicos ou voluntariado.",
-};
+  path: "/como-doar",
+});
 
 // Lê do estoque real (view_itens_necessarios) a cada requisição.
 export const dynamic = "force-dynamic";

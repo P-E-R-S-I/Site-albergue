@@ -10,12 +10,14 @@ import {
   USE_MOCK,
 } from "@/lib/supabase";
 import { TrendingUp, TrendingDown, BarChart2, RefreshCw } from "lucide-react";
+import { buildMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildMetadata({
   title: "Transparência",
   description:
     "Acompanhe em tempo real as doações recebidas, os gastos e o nível de estoque do Albergue São Vicente de Paulo.",
-};
+  path: "/transparencia",
+});
 
 // Renderização sob demanda (não cacheia) para sempre refletir o banco
 export const dynamic = "force-dynamic";

@@ -2,14 +2,16 @@ import { getFaqs } from "@/lib/supabase";
 import { PLACEHOLDER_INFO_ALBERGUE } from "@/lib/dados-placeholder";
 import FAQAccordion from "@/components/sections/FAQAccordion";
 import { MessageCircle } from "lucide-react";
+import { buildMetadata } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
-export const metadata = {
+export const metadata = buildMetadata({
   title: "Perguntas Frequentes",
   description:
     "Tire suas dúvidas sobre o Albergue São Vicente: doações, horários de visita, voluntariado e mais.",
-};
+  path: "/faq",
+});
 
 export default async function FAQPage() {
   const faqs = await getFaqs();

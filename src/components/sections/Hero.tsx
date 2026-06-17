@@ -28,8 +28,8 @@ export default function Hero() {
         className="absolute inset-0 pointer-events-none parallax-bg"
         aria-hidden="true"
       >
-        <div className="absolute -top-20 -right-32 w-[700px] h-[700px] rounded-full bg-svp-sienna/6 blur-3xl" />
-        <div className="absolute -bottom-20 -left-20 w-[500px] h-[500px] rounded-full bg-svp-forest/6 blur-3xl" />
+        <div className="absolute -top-20 -right-32 w-[700px] h-[700px] rounded-full bg-svp-sienna/5 blur-3xl" />
+        <div className="absolute -bottom-20 -left-20 w-[500px] h-[500px] rounded-full bg-svp-forest/5 blur-3xl" />
         <svg
           className="absolute right-0 top-0 h-full w-auto opacity-[0.04]"
           viewBox="0 0 400 900"

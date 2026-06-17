@@ -9,8 +9,19 @@ import InstagramCarrossel from "@/components/sections/InstagramCarrossel";
 import Link from "next/link";
 import { ArrowRight, MapPin, Phone, Clock } from "lucide-react";
 import { PLACEHOLDER_INFO_ALBERGUE } from "@/lib/dados-placeholder";
+import { buildMetadata, SITE_NAME } from "@/lib/seo";
 
 export const metadata: Metadata = {
+  // Usa o nome completo da instituição no título social (og:title/twitter:title) —
+  // é isso que aparece no card do WhatsApp/Instagram, então precisa ser
+  // autoexplicativo, diferente do título curto da aba do navegador.
+  ...buildMetadata({
+    title: SITE_NAME,
+    description:
+      "Cuidado, dignidade e esperança para idosos em situação de vulnerabilidade em Jataí, GO. Saiba como ajudar e acompanhe nossa transparência.",
+    path: "",
+  }),
+  // Sobrescreve só o título da aba do navegador (não afeta openGraph/twitter acima).
   title: "Início",
 };
 

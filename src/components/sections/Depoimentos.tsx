@@ -41,42 +41,33 @@ export default function Depoimentos() {
   }, [current]);
 
   return (
-    <section className="bg-svp-cream py-24 overflow-hidden">
+    <section className="bg-svp-linen py-14 lg:py-24 overflow-hidden">
       <div className="max-w-4xl mx-auto px-5 lg:px-8">
-        <div className="flex items-center gap-3 mb-12 justify-center" data-animate>
-          <div className="h-px w-10 bg-svp-amber" />
-          <span className="text-svp-amber text-xs tracking-[0.22em] uppercase font-semibold">
-            Quem nos conhece, fala
-          </span>
-          <div className="h-px w-10 bg-svp-amber" />
-        </div>
+        <span
+          className="text-svp-sienna text-[10px] lg:text-xs tracking-[0.2em] uppercase font-bold block mb-5 lg:mb-8"
+          data-animate
+        >
+          Quem nos conhece, fala
+        </span>
 
         {/* Texto do depoimento */}
-        <div className="relative min-h-[160px] flex items-center justify-center" data-animate data-delay="1">
-          {/* Citação grande decorativa — acima e à esquerda, sem sobrepor o texto */}
-          <div
-            className="font-display text-[96px] md:text-[120px] text-svp-sienna/10 leading-none select-none absolute -top-10 left-0 pointer-events-none"
-            aria-hidden="true"
-          >
-            &ldquo;
-          </div>
+        <div className="relative min-h-[190px] md:min-h-[170px]" data-animate data-delay="1">
           <blockquote
             key={current}
-            className="font-display text-2xl md:text-3xl text-svp-dark italic leading-snug font-medium text-center"
+            className="font-display text-xl md:text-2xl lg:text-3xl text-svp-dark italic leading-[1.4] font-medium border-l-[3px] border-svp-amber pl-5 lg:pl-8"
             style={{ animation: "fadeInUp 0.55s cubic-bezier(0.16,1,0.3,1) both" }}
           >
-            &ldquo;{DEPOIMENTOS[current].texto}&rdquo;
-            <footer className="mt-6 flex items-center justify-center gap-3 not-italic">
-              <div className="h-px w-8 bg-svp-amber" />
-              <cite className="text-svp-muted text-sm font-medium font-body not-italic">
-                {DEPOIMENTOS[current].autor}
+            {DEPOIMENTOS[current].texto}
+            <footer className="mt-4 lg:mt-6 not-italic">
+              <cite className="text-svp-muted text-[12.5px] lg:text-sm font-semibold font-body not-italic">
+                — {DEPOIMENTOS[current].autor}
               </cite>
             </footer>
           </blockquote>
         </div>
 
         {/* Dots de navegação */}
-        <div className="flex items-center justify-center gap-3 mt-10" data-animate data-delay="2">
+        <div className="flex items-center gap-2 mt-6 pl-5 lg:pl-8" data-animate data-delay="2">
           {DEPOIMENTOS.map((_, i) => (
             <button
               key={i}
@@ -84,8 +75,8 @@ export default function Depoimentos() {
               aria-label={`Depoimento ${i + 1}`}
               className="transition-all duration-300"
               style={{
-                width: i === current ? "28px" : "8px",
-                height: "8px",
+                width: i === current ? "24px" : "7px",
+                height: "7px",
                 borderRadius: "4px",
                 background: i === current ? "#803320" : "#D9CEBD",
               }}
@@ -97,7 +88,7 @@ export default function Depoimentos() {
       <style>{`
         @keyframes fadeInUp {
           from { opacity: 0; transform: translateY(16px); }
-          to   { opacity: 1; transform: translateY(0); }
+        to   { opacity: 1; transform: translateY(0); }
         }
       `}</style>
     </section>

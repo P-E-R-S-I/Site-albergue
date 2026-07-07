@@ -4,66 +4,74 @@ import { Package, DollarSign, MessageCircle, ArrowRight } from "lucide-react";
 export default function ComoAjudar({ whatsapp }: { whatsapp: string }) {
   const FORMAS = [
     {
-      icon: <DollarSign size={24} className="text-svp-amber" />,
+      icon: <DollarSign size={24} />,
+      num: "01",
       titulo: "Doação em dinheiro",
       desc: "Transfira via Pix ou depósito bancário. Toda entrada é registrada no nosso painel de transparência.",
       href: "/como-doar",
-      cor: "bg-svp-amber/10 border-svp-amber/30",
+      card: "bg-svp-sienna text-white",
+      numCor: "text-white/40",
+      descCor: "text-white/75",
+      linkCor: "text-white font-semibold",
     },
     {
-      icon: <Package size={24} className="text-svp-sienna" />,
+      icon: <Package size={24} />,
+      num: "02",
       titulo: "Itens e alimentos",
       desc: "Fraldas geriátricas (nosso item mais urgente), alimentos não perecíveis, higiene pessoal e roupas. Veja a lista completa do que mais precisamos.",
       href: "/como-doar",
-      cor: "bg-svp-sienna/10 border-svp-sienna/30",
+      card: "bg-svp-amber text-svp-dark",
+      numCor: "text-svp-dark/35",
+      descCor: "text-svp-dark/70",
+      linkCor: "text-svp-dark font-bold",
     },
     {
-      icon: <MessageCircle size={24} className="text-svp-forest" />,
+      icon: <MessageCircle size={24} />,
+      num: "03",
       titulo: "Voluntariado",
       desc: "De barbeiros a grupos que preparam lanches — há espaço para doar seu tempo aos idosos. Entre em contato para conhecer as oportunidades.",
       href: whatsapp,
-      cor: "bg-svp-forest/10 border-svp-forest/30",
+      card: "bg-svp-forest text-white",
+      numCor: "text-white/40",
+      descCor: "text-white/75",
+      linkCor: "text-white font-semibold",
       externo: true,
     },
   ];
   return (
-    <section className="bg-svp-dark py-24 relative overflow-hidden">
-      <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-svp-sienna/5 rounded-full blur-3xl" />
-      </div>
+    <section className="bg-svp-cream py-14 lg:py-24">
+      <div className="max-w-6xl mx-auto px-5 lg:px-8">
+        <span
+          className="text-svp-sienna text-[10px] lg:text-xs tracking-[0.2em] uppercase font-bold block mb-2"
+          data-animate
+        >
+          Como contribuir
+        </span>
+        <h2
+          className="font-display text-[26px] leading-[1.15] md:text-4xl lg:text-5xl text-svp-dark font-bold mb-6 lg:mb-10 max-w-2xl"
+          data-animate
+          data-delay="1"
+        >
+          Há uma forma de ajudar{" "}
+          <em className="text-svp-sienna not-italic">para cada pessoa.</em>
+        </h2>
 
-      <div className="relative max-w-6xl mx-auto px-5 lg:px-8">
-        <div className="text-center mb-14">
-          <div className="flex items-center justify-center gap-3 mb-5" data-animate>
-            <div className="h-px w-10 bg-svp-amber" />
-            <span className="text-svp-amber text-xs tracking-[0.22em] uppercase font-semibold">
-              Como contribuir
-            </span>
-            <div className="h-px w-10 bg-svp-amber" />
-          </div>
-          <h2
-            className="font-display text-4xl md:text-5xl text-svp-cream font-semibold"
-            data-animate
-            data-delay="1"
-          >
-            Há uma forma de ajudar<br />
-            <em className="text-svp-amber">para cada pessoa.</em>
-          </h2>
-        </div>
-
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="grid gap-3 lg:grid-cols-3 lg:gap-6">
           {FORMAS.map((f, i) => (
             <div
               key={i}
-              className={`border rounded-2xl p-7 ${f.cor} flex flex-col hover:scale-[1.02] transition-transform duration-300`}
+              className={`rounded-2xl p-5 lg:p-7 flex flex-col ${f.card} hover:scale-[1.02] transition-transform duration-300`}
               data-animate
               data-delay={String(i + 1)}
             >
-              <div className="mb-4">{f.icon}</div>
-              <h3 className="font-display text-2xl text-svp-cream font-semibold mb-3">
+              <div className="flex items-center justify-between mb-3">
+                {f.icon}
+                <span className={`font-display text-[15px] font-bold ${f.numCor}`}>{f.num}</span>
+              </div>
+              <h3 className="font-display text-xl lg:text-2xl font-semibold mb-2">
                 {f.titulo}
               </h3>
-              <p className="text-svp-cream/60 text-sm leading-relaxed flex-1 mb-6">
+              <p className={`text-[13px] lg:text-sm leading-relaxed flex-1 mb-3 ${f.descCor}`}>
                 {f.desc}
               </p>
               {f.externo ? (
@@ -71,16 +79,16 @@ export default function ComoAjudar({ whatsapp }: { whatsapp: string }) {
                   href={f.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 text-svp-cream/80 hover:text-svp-cream text-sm font-semibold transition-colors"
+                  className={`inline-flex items-center gap-1.5 text-[13px] ${f.linkCor}`}
                 >
-                  Saiba mais <ArrowRight size={14} />
+                  Saiba mais <ArrowRight size={13} />
                 </a>
               ) : (
                 <Link
                   href={f.href}
-                  className="flex items-center gap-2 text-svp-cream/80 hover:text-svp-cream text-sm font-semibold transition-colors"
+                  className={`inline-flex items-center gap-1.5 text-[13px] ${f.linkCor}`}
                 >
-                  Saiba mais <ArrowRight size={14} />
+                  Saiba mais <ArrowRight size={13} />
                 </Link>
               )}
             </div>

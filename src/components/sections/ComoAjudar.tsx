@@ -1,33 +1,31 @@
 import Link from "next/link";
 import { Package, DollarSign, MessageCircle, ArrowRight } from "lucide-react";
-import { PLACEHOLDER_INFO_ALBERGUE } from "@/lib/dados-placeholder";
 
-const FORMAS = [
-  {
-    icon: <DollarSign size={24} className="text-svp-amber" />,
-    titulo: "Doação em dinheiro",
-    desc: "Transfira via Pix ou depósito bancário. Toda entrada é registrada no nosso painel de transparência.",
-    href: "/como-doar",
-    cor: "bg-svp-amber/10 border-svp-amber/30",
-  },
-  {
-    icon: <Package size={24} className="text-svp-sienna" />,
-    titulo: "Itens e alimentos",
-    desc: "Fraldas, alimentos não perecíveis, higiene pessoal e roupas. Veja a lista completa do que mais precisamos.",
-    href: "/como-doar",
-    cor: "bg-svp-sienna/10 border-svp-sienna/30",
-  },
-  {
-    icon: <MessageCircle size={24} className="text-svp-forest" />,
-    titulo: "Voluntariado",
-    desc: "Recreação, apoio administrativo ou acompanhamento dos idosos. Entre em contato para conhecer as oportunidades.",
-    href: PLACEHOLDER_INFO_ALBERGUE.whatsapp,
-    cor: "bg-svp-forest/10 border-svp-forest/30",
-    externo: true,
-  },
-];
-
-export default function ComoAjudar() {
+export default function ComoAjudar({ whatsapp }: { whatsapp: string }) {
+  const FORMAS = [
+    {
+      icon: <DollarSign size={24} className="text-svp-amber" />,
+      titulo: "Doação em dinheiro",
+      desc: "Transfira via Pix ou depósito bancário. Toda entrada é registrada no nosso painel de transparência.",
+      href: "/como-doar",
+      cor: "bg-svp-amber/10 border-svp-amber/30",
+    },
+    {
+      icon: <Package size={24} className="text-svp-sienna" />,
+      titulo: "Itens e alimentos",
+      desc: "Fraldas geriátricas (nosso item mais urgente), alimentos não perecíveis, higiene pessoal e roupas. Veja a lista completa do que mais precisamos.",
+      href: "/como-doar",
+      cor: "bg-svp-sienna/10 border-svp-sienna/30",
+    },
+    {
+      icon: <MessageCircle size={24} className="text-svp-forest" />,
+      titulo: "Voluntariado",
+      desc: "De barbeiros a grupos que preparam lanches — há espaço para doar seu tempo aos idosos. Entre em contato para conhecer as oportunidades.",
+      href: whatsapp,
+      cor: "bg-svp-forest/10 border-svp-forest/30",
+      externo: true,
+    },
+  ];
   return (
     <section className="bg-svp-dark py-24 relative overflow-hidden">
       <div className="absolute inset-0 pointer-events-none" aria-hidden="true">

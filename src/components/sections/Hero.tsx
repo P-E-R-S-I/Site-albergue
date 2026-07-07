@@ -3,9 +3,17 @@ import { useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, Heart } from "lucide-react";
-import { PLACEHOLDER_INFO_ALBERGUE } from "@/lib/dados-placeholder";
+import type { InfoAlbergue, EstatisticasAlbergue } from "@/lib/supabase";
 
-export default function Hero() {
+export default function Hero({
+  info,
+  stats,
+  doacaoMes,
+}: {
+  info: InfoAlbergue;
+  stats: EstatisticasAlbergue;
+  doacaoMes: string | null; // já formatado em BRL pelo servidor
+}) {
   const bgRef = useRef<HTMLDivElement>(null);
 
   // Parallax suave no fundo
@@ -52,7 +60,7 @@ export default function Hero() {
           >
             <div className="h-px w-10 bg-svp-amber" />
             <span className="text-svp-amber text-xs tracking-[0.22em] uppercase font-semibold">
-              Jataí, Goiás · Desde 1971
+              Jataí, Goiás · Desde {stats.anoFundacao}
             </span>
           </div>
 
@@ -69,7 +77,7 @@ export default function Hero() {
             className="text-svp-brown text-lg leading-relaxed max-w-lg mb-10"
             style={{ animation: "fadeUp 0.8s cubic-bezier(0.16,1,0.3,1) 0.35s both" }}
           >
-            {PLACEHOLDER_INFO_ALBERGUE.missao}
+            {info.missao}
           </p>
 
           <div
@@ -125,7 +133,7 @@ export default function Hero() {
               ))}
             </div>
             <p className="text-svp-muted text-sm leading-tight">
-              <strong className="text-svp-dark">78 idosos</strong> recebem<br />
+              <strong className="text-svp-dark">{stats.idososAtendidos} idosos</strong> recebem<br />
               cuidado todos os dias
             </p>
           </div>
@@ -150,22 +158,25 @@ export default function Hero() {
               />
             </div>
 
-            {/* Cards flutuantes */}
-            <div
-              className="absolute -bottom-6 -left-6 bg-white shadow-xl rounded-2xl p-5 border border-svp-border"
-              style={{ animation: "fadeUp 0.8s cubic-bezier(0.16,1,0.3,1) 0.7s both" }}
-            >
-              <p className="text-svp-muted text-xs tracking-widest uppercase mb-1">Este mês</p>
-              <p className="font-display text-svp-sienna text-3xl font-bold">R$ 4.900</p>
-              <p className="text-svp-brown text-xs mt-1">em doações recebidas</p>
-            </div>
+            {/* Cards flutuantes — dados reais (banco); o card de doações só aparece
+                quando há doações registradas no mês corrente */}
+            {doacaoMes && (
+              <div
+                className="absolute -bottom-6 -left-6 bg-white shadow-xl rounded-2xl p-5 border border-svp-border"
+                style={{ animation: "fadeUp 0.8s cubic-bezier(0.16,1,0.3,1) 0.7s both" }}
+              >
+                <p className="text-svp-muted text-xs tracking-widest uppercase mb-1">Este mês</p>
+                <p className="font-display text-svp-sienna text-3xl font-bold">{doacaoMes}</p>
+                <p className="text-svp-brown text-xs mt-1">em doações recebidas</p>
+              </div>
+            )}
 
             <div
               className="absolute -top-4 -right-4 bg-svp-forest text-white rounded-2xl p-4 shadow-xl"
               style={{ animation: "fadeUp 0.8s cubic-bezier(0.16,1,0.3,1) 0.8s both" }}
             >
               <p className="text-white/70 text-xs tracking-widest uppercase mb-1">Voluntários</p>
-              <p className="font-display text-white text-3xl font-bold">24</p>
+              <p className="font-display text-white text-3xl font-bold">{stats.voluntariosAtivos}</p>
               <p className="text-white/70 text-xs mt-1">ativos na comunidade</p>
             </div>
           </div>

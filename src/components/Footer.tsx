@@ -1,11 +1,11 @@
 import Link from "next/link";
 import Image from "next/image";
 import { MapPin, Phone, Clock, Heart, Instagram, Mail } from "lucide-react";
-import { PLACEHOLDER_INFO_ALBERGUE } from "@/lib/dados-placeholder";
+import type { InfoAlbergue } from "@/lib/supabase";
 
 const INSTAGRAM_URL = "https://www.instagram.com/vicentedepaulodejatai";
 
-export default function Footer() {
+export default function Footer({ info }: { info: InfoAlbergue }) {
   return (
     <footer className="bg-svp-dark text-svp-cream/80">
       {/* CTA faixa superior */}
@@ -20,7 +20,7 @@ export default function Footer() {
             </p>
           </div>
           <a
-            href={PLACEHOLDER_INFO_ALBERGUE.whatsapp}
+            href={info.whatsapp}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-2 bg-white text-svp-sienna font-semibold text-sm px-6 py-3 rounded-full hover:bg-svp-cream transition-colors flex-shrink-0"
@@ -51,7 +51,7 @@ export default function Footer() {
             </p>
           </div>
           <p className="text-svp-cream/60 text-sm leading-relaxed mb-5">
-            {PLACEHOLDER_INFO_ALBERGUE.missao}
+            {info.missao}
           </p>
           {/* Instagram link */}
           <a
@@ -94,41 +94,41 @@ export default function Footer() {
           <ul className="space-y-3">
             <li className="flex items-start gap-3">
               <MapPin size={15} className="text-svp-amber mt-0.5 flex-shrink-0" />
-              <span className="text-svp-cream/60 text-sm">{PLACEHOLDER_INFO_ALBERGUE.endereco}</span>
+              <span className="text-svp-cream/60 text-sm">{info.endereco}</span>
             </li>
             <li className="flex items-start gap-3">
               <Phone size={15} className="text-svp-amber mt-0.5 flex-shrink-0" />
               <a
-                href={`tel:${PLACEHOLDER_INFO_ALBERGUE.telefone.replace(/\D/g, "")}`}
+                href={`tel:${info.telefone.replace(/\D/g, "")}`}
                 className="text-svp-cream/60 hover:text-svp-cream text-sm transition-colors"
               >
-                {PLACEHOLDER_INFO_ALBERGUE.telefone}
+                {info.telefone}
               </a>
             </li>
             <li className="flex items-start gap-3">
               <Mail size={15} className="text-svp-amber mt-0.5 flex-shrink-0" />
               <a
-                href={`mailto:${PLACEHOLDER_INFO_ALBERGUE.email}`}
+                href={`mailto:${info.email}`}
                 className="text-svp-cream/60 hover:text-svp-cream text-sm transition-colors"
               >
-                {PLACEHOLDER_INFO_ALBERGUE.email}
+                {info.email}
               </a>
             </li>
             <li className="flex items-start gap-3">
               <Clock size={15} className="text-svp-amber mt-0.5 flex-shrink-0" />
               <span className="text-svp-cream/60 text-sm">
-                Visitas: {PLACEHOLDER_INFO_ALBERGUE.horarioVisitas}
+                Visitas: {info.horarioVisitas}
               </span>
             </li>
             <li className="flex items-start gap-3">
               <Clock size={15} className="text-svp-amber mt-0.5 flex-shrink-0" />
               <span className="text-svp-cream/60 text-sm">
-                Doações: {PLACEHOLDER_INFO_ALBERGUE.horarioDoacoes}
+                Doações: {info.horarioDoacoes}
               </span>
             </li>
           </ul>
           <p className="text-svp-cream/30 text-xs mt-5 leading-relaxed">
-            {PLACEHOLDER_INFO_ALBERGUE.vinculo}
+            {info.vinculo}
           </p>
         </div>
       </div>

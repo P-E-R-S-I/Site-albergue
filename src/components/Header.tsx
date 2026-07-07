@@ -5,7 +5,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Menu, X, Heart } from "lucide-react";
-import { PLACEHOLDER_INFO_ALBERGUE } from "@/lib/dados-placeholder";
 
 const NAV_LINKS = [
   { href: "/", label: "Início" },
@@ -14,7 +13,7 @@ const NAV_LINKS = [
   { href: "/faq", label: "Dúvidas" },
 ];
 
-export default function Header() {
+export default function Header({ whatsapp }: { whatsapp: string }) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
 
@@ -64,7 +63,7 @@ export default function Header() {
 
           {/* CTA Botão WhatsApp */}
           <a
-            href={PLACEHOLDER_INFO_ALBERGUE.whatsapp}
+            href={whatsapp}
             target="_blank"
             rel="noopener noreferrer"
             className="hidden md:flex items-center gap-2 bg-svp-forest text-white text-sm font-semibold px-4 py-2 rounded-full hover:bg-svp-sage transition-colors"
@@ -102,7 +101,7 @@ export default function Header() {
             </Link>
           ))}
           <a
-            href={PLACEHOLDER_INFO_ALBERGUE.whatsapp}
+            href={whatsapp}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center justify-center gap-2 bg-svp-forest text-white text-sm font-semibold px-4 py-3 rounded-full mt-2 hover:bg-svp-sage transition-colors"

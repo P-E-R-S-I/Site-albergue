@@ -1,5 +1,4 @@
-import { getFaqs } from "@/lib/supabase";
-import { PLACEHOLDER_INFO_ALBERGUE } from "@/lib/dados-placeholder";
+import { getFaqs, getInfoAlbergue } from "@/lib/supabase";
 import FAQAccordion from "@/components/sections/FAQAccordion";
 import { MessageCircle } from "lucide-react";
 import { buildMetadata } from "@/lib/seo";
@@ -14,7 +13,7 @@ export const metadata = buildMetadata({
 });
 
 export default async function FAQPage() {
-  const faqs = await getFaqs();
+  const [faqs, info] = await Promise.all([getFaqs(), getInfoAlbergue()]);
 
   return (
     <div className="bg-svp-cream min-h-screen">
@@ -55,7 +54,7 @@ export default async function FAQPage() {
             com calma e cuidado.
           </p>
           <a
-            href={PLACEHOLDER_INFO_ALBERGUE.whatsapp}
+            href={info.whatsapp}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 bg-white text-svp-sienna font-semibold text-sm px-6 py-3 rounded-full hover:bg-svp-cream transition-colors"

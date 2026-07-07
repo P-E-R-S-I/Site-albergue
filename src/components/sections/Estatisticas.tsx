@@ -1,34 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { Users, UserCheck, Calendar, Home } from "lucide-react";
-import { PLACEHOLDER_ESTATISTICAS } from "@/lib/dados-placeholder";
-
-const STATS = [
-  {
-    icon: <Home size={22} className="text-svp-sienna" />,
-    valor: PLACEHOLDER_ESTATISTICAS.idososAtendidos,
-    label: "Idosos acolhidos",
-    sufixo: "",
-  },
-  {
-    icon: <UserCheck size={22} className="text-svp-forest" />,
-    valor: PLACEHOLDER_ESTATISTICAS.voluntariosAtivos,
-    label: "Voluntários ativos",
-    sufixo: "+",
-  },
-  {
-    icon: <Calendar size={22} className="text-svp-amber" />,
-    valor: PLACEHOLDER_ESTATISTICAS.anosDeServico,
-    label: "Anos de serviço",
-    sufixo: "",
-  },
-  {
-    icon: <Users size={22} className="text-svp-sage" />,
-    valor: PLACEHOLDER_ESTATISTICAS.familiasBeneficiadas,
-    label: "Famílias beneficiadas",
-    sufixo: "",
-  },
-];
+import type { EstatisticasAlbergue } from "@/lib/supabase";
 
 function Counter({ target, suffix }: { target: number; suffix: string }) {
   const [value, setValue] = useState(0);
@@ -66,7 +39,33 @@ function Counter({ target, suffix }: { target: number; suffix: string }) {
   );
 }
 
-export default function Estatisticas() {
+export default function Estatisticas({ stats }: { stats: EstatisticasAlbergue }) {
+  const STATS = [
+    {
+      icon: <Home size={22} className="text-svp-sienna" />,
+      valor: stats.idososAtendidos,
+      label: "Idosos acolhidos",
+      sufixo: "",
+    },
+    {
+      icon: <UserCheck size={22} className="text-svp-forest" />,
+      valor: stats.voluntariosAtivos,
+      label: "Voluntários ativos",
+      sufixo: "+",
+    },
+    {
+      icon: <Calendar size={22} className="text-svp-amber" />,
+      valor: stats.anosDeServico,
+      label: "Anos de serviço",
+      sufixo: "",
+    },
+    {
+      icon: <Users size={22} className="text-svp-sage" />,
+      valor: stats.familiasBeneficiadas,
+      label: "Famílias beneficiadas",
+      sufixo: "",
+    },
+  ];
   return (
     <section className="bg-svp-linen border-y border-svp-border py-20">
       <div className="max-w-6xl mx-auto px-5 lg:px-8">

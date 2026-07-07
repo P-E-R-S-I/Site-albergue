@@ -8,7 +8,7 @@ import ComoAjudar from "@/components/sections/ComoAjudar";
 import InstagramCarrossel from "@/components/sections/InstagramCarrossel";
 import Link from "next/link";
 import { ArrowRight, MapPin, Phone, Clock } from "lucide-react";
-import { PLACEHOLDER_INFO_ALBERGUE } from "@/lib/dados-placeholder";
+import { getInfoAlbergue, getEstatisticas, getDoacoesMensais } from "@/lib/supabase";
 import { buildMetadata, SITE_NAME } from "@/lib/seo";
 
 export const metadata: Metadata = {
@@ -25,12 +25,29 @@ export const metadata: Metadata = {
   title: "Início",
 };
 
-export default function HomePage() {
+export default async function HomePage() {
+  const [info, stats, doacoesMensais] = await Promise.all([
+    getInfoAlbergue(),
+    getEstatisticas(),
+    getDoacoesMensais(),
+  ]);
+  // Card "Este mês" do Hero: só usa o valor se a última posição da série for
+  // de fato o mês corrente (o fallback de placeholder termina em meses antigos).
+  // Formata aqui (servidor) para evitar divergência de ICU na hidratação.
+  const MESES = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
+  const hoje = new Date();
+  const mesAtualLabel = `${MESES[hoje.getMonth()]}/${String(hoje.getFullYear()).slice(2)}`;
+  const ultima = doacoesMensais[doacoesMensais.length - 1];
+  const doacaoMesFmt =
+    ultima && ultima.mes === mesAtualLabel && ultima.valor > 0
+      ? ultima.valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL", maximumFractionDigits: 0 })
+      : null;
+
   return (
     <>
-      <Hero />
+      <Hero info={info} stats={stats} doacaoMes={doacaoMesFmt} />
 
-      <Estatisticas />
+      <Estatisticas stats={stats} />
 
       {/* Wave divider */}
       <div className="wave-divider bg-svp-linen" style={{ marginBottom: "-2px" }}>
@@ -45,7 +62,7 @@ export default function HomePage() {
 
       <Depoimentos />
 
-      <ComoAjudar />
+      <ComoAjudar whatsapp={info.whatsapp} />
 
       <InstagramCarrossel />
 
@@ -74,19 +91,19 @@ export default function HomePage() {
             <ul className="space-y-4 mb-8" data-animate data-delay="3">
               <li className="flex items-start gap-3">
                 <MapPin size={18} className="text-svp-sienna mt-0.5 flex-shrink-0" />
-                <span className="text-svp-brown">{PLACEHOLDER_INFO_ALBERGUE.endereco}</span>
+                <span className="text-svp-brown">{info.endereco}</span>
               </li>
               <li className="flex items-start gap-3">
                 <Phone size={18} className="text-svp-sienna mt-0.5 flex-shrink-0" />
-                <span className="text-svp-brown">{PLACEHOLDER_INFO_ALBERGUE.telefone}</span>
+                <span className="text-svp-brown">{info.telefone}</span>
               </li>
               <li className="flex items-start gap-3">
                 <Clock size={18} className="text-svp-sienna mt-0.5 flex-shrink-0" />
-                <span className="text-svp-brown">{PLACEHOLDER_INFO_ALBERGUE.horarioVisitas}</span>
+                <span className="text-svp-brown">{info.horarioVisitas}</span>
               </li>
             </ul>
             <a
-              href={PLACEHOLDER_INFO_ALBERGUE.whatsapp}
+              href={info.whatsapp}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 bg-svp-sienna text-white font-semibold text-sm px-6 py-3 rounded-full hover:bg-svp-rose transition-colors"
@@ -101,7 +118,7 @@ export default function HomePage() {
             data-animate data-delay="2"
           >
             <iframe
-              src="https://www.google.com/maps?q=-17.8624477,-51.718235&z=16&output=embed"
+              src={`https://www.google.com/maps?q=${encodeURIComponent(info.endereco)}&z=16&output=embed`}
               width="100%"
               height="100%"
               style={{ border: 0 }}

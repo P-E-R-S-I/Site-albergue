@@ -4,6 +4,11 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ScrollAnimator from "@/components/ScrollAnimator";
 import { buildMetadata, SITE_NAME, SITE_URL } from "@/lib/seo";
+import { getInfoAlbergue } from "@/lib/supabase";
+
+// Header/Footer exibem contato e horários vindos do banco (site_config) —
+// renderiza a cada requisição para refletir edições feitas pelo app na hora.
+export const dynamic = "force-dynamic";
 
 const HOME_DESCRIPTION =
   "Cuidado, dignidade e esperança para idosos em situação de vulnerabilidade em Jataí, GO. Saiba como ajudar e acompanhe nossa transparência.";
@@ -41,18 +46,19 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const info = await getInfoAlbergue();
   return (
     <html lang="pt-BR">
       <body className="bg-svp-cream">
         {/* Barra de progresso de scroll */}
         <div id="scroll-progress" aria-hidden="true" />
         <ScrollAnimator />
-        <Header />
+        <Header whatsapp={info.whatsapp} />
         <main>{children}</main>
-        <Footer />
+        <Footer info={info} />
       </body>
     </html>
   );

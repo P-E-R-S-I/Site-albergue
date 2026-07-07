@@ -2,6 +2,7 @@
 // CLIENTE SUPABASE + funções de leitura pública
 // Conecta com o banco da Frente 1 (Núcleo de Dados)
 // =============================================
+import { cache } from "react";
 import { createClient } from "@supabase/supabase-js";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
@@ -57,6 +58,38 @@ export interface Faq {
 export interface ItemNecessario {
   item: string;
   urgente: boolean;
+}
+
+// Informações institucionais — tabela site_config (chave/valor), editada pelo
+// app de gestão. O placeholder é só fallback quando o banco está inacessível.
+export interface InfoAlbergue {
+  nome: string;
+  endereco: string;
+  telefone: string;
+  email: string;
+  whatsapp: string;
+  pixKey: string;
+  cnpj: string;
+  banco: string;
+  agencia: string;
+  conta: string;
+  titular: string;
+  horarioFuncionamento: string;
+  horarioVisitas: string;
+  horarioDoacoes: string;
+  agendamentoVisitas: string;
+  restricaoVisitas: string;
+  pontosColeta: string;
+  missao: string;
+  vinculo: string;
+}
+
+export interface EstatisticasAlbergue {
+  idososAtendidos: number;
+  voluntariosAtivos: number;
+  anoFundacao: number;
+  anosDeServico: number;
+  familiasBeneficiadas: number;
 }
 
 // ─────────────────────────────────────────────
@@ -210,7 +243,7 @@ export async function getFaqs(): Promise<Faq[]> {
     .from("faqs")
     .select("id, pergunta, resposta, categoria")
     .eq("ativo", true)
-    .order("categoria", { ascending: true });
+    .order("ordem", { ascending: true });
 
   if (error || !data) {
     console.warn("[getFaqs] fallback placeholder:", error?.message);
@@ -224,6 +257,73 @@ export async function getFaqs(): Promise<Faq[]> {
   }
 
   return data as Faq[];
+}
+
+// ─────────────────────────────────────────────
+// Leitura — informações institucionais (site_config)
+// Ciclo: APP cadastra → site_config → site expõe. cache() deduplica a busca
+// entre layout e páginas dentro da mesma requisição.
+// ─────────────────────────────────────────────
+
+const getSiteConfigMap = cache(async (): Promise<Record<string, string> | null> => {
+  if (USE_MOCK) return null;
+  const { data, error } = await supabase.from("site_config").select("chave, valor");
+  if (error || !data || data.length === 0) {
+    if (error) console.warn("[getSiteConfigMap] fallback placeholder:", error.message);
+    return null;
+  }
+  const map: Record<string, string> = {};
+  for (const row of data) map[row.chave] = row.valor ?? "";
+  return map;
+});
+
+export async function getInfoAlbergue(): Promise<InfoAlbergue> {
+  const { PLACEHOLDER_INFO_ALBERGUE: fb } = await import("./dados-placeholder");
+  const map = await getSiteConfigMap();
+  if (!map) return { ...fb };
+  return {
+    nome: map.nome || fb.nome,
+    endereco: map.endereco || fb.endereco,
+    telefone: map.telefone || fb.telefone,
+    email: map.email || fb.email,
+    whatsapp: map.whatsapp || fb.whatsapp,
+    pixKey: map.pix_chave || fb.pixKey,
+    cnpj: map.cnpj || fb.cnpj,
+    banco: map.banco || fb.banco,
+    agencia: map.agencia || fb.agencia,
+    conta: map.conta || fb.conta,
+    titular: map.titular || fb.titular,
+    horarioFuncionamento: map.horario_funcionamento || fb.horarioFuncionamento,
+    horarioVisitas: map.horario_visitas || fb.horarioVisitas,
+    horarioDoacoes: map.horario_doacoes || fb.horarioDoacoes,
+    agendamentoVisitas: map.agendamento_visitas || fb.agendamentoVisitas,
+    restricaoVisitas: map.restricao_visitas || fb.restricaoVisitas,
+    pontosColeta: map.pontos_coleta || fb.pontosColeta,
+    missao: map.missao || fb.missao,
+    vinculo: map.vinculo || fb.vinculo,
+  };
+}
+
+export async function getEstatisticas(): Promise<EstatisticasAlbergue> {
+  const { PLACEHOLDER_ESTATISTICAS: fb } = await import("./dados-placeholder");
+  const map = await getSiteConfigMap();
+  if (!map) {
+    return { ...fb, anosDeServico: new Date().getFullYear() - fb.anoFundacao };
+  }
+  // Inteiro não-negativo — rejeita formatos como "1.971" (Number('1.971') = 1.971)
+  // e aceita zero legítimo; qualquer outra coisa cai no valor de fallback.
+  const num = (v: string | undefined, def: number) => {
+    const n = Number(v);
+    return Number.isInteger(n) && n >= 0 ? n : def;
+  };
+  const anoFundacao = num(map.ano_fundacao, fb.anoFundacao);
+  return {
+    idososAtendidos: num(map.idosos_residentes, fb.idososAtendidos),
+    voluntariosAtivos: num(map.voluntarios_ativos, fb.voluntariosAtivos),
+    anoFundacao,
+    anosDeServico: new Date().getFullYear() - anoFundacao,
+    familiasBeneficiadas: num(map.familias_beneficiadas, fb.familiasBeneficiadas),
+  };
 }
 
 // ─────────────────────────────────────────────

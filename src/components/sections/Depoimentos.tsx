@@ -17,11 +17,6 @@ const DEPOIMENTOS = [
       "Espalhar amor pelo mundo, missão de cada um de nós!!! Parabéns por fazerem o bem em cada pacotinho entregue.",
     autor: "Doadora",
   },
-  {
-    texto:
-      "O importante não é só programar. É mudar o ser humano, ser uma pessoa que vai ajudar a sociedade.",
-    autor: "Alexandre — Presidente do Albergue",
-  },
 ];
 
 export default function Depoimentos() {

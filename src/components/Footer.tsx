@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Image from "next/image";
 import { MapPin, Phone, Clock, Instagram, Mail } from "lucide-react";
 import type { InfoAlbergue } from "@/lib/supabase";
@@ -8,7 +9,7 @@ export default function Footer({ info }: { info: InfoAlbergue }) {
   return (
     <footer className="bg-svp-dark text-svp-cream/80">
       {/* Corpo do footer */}
-      <div className="max-w-6xl mx-auto px-5 lg:px-8 py-10 lg:py-12 grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-14">
+      <div className="max-w-6xl mx-auto px-5 lg:px-8 py-10 lg:py-12 grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-10">
 
         {/* Coluna 1 — Identidade com logo real */}
         <div>
@@ -41,7 +42,28 @@ export default function Footer({ info }: { info: InfoAlbergue }) {
           </a>
         </div>
 
-        {/* Coluna 2 — Contato */}
+        {/* Coluna 2 — Links */}
+        <div>
+          <p className="text-svp-cream text-xs tracking-[0.18em] uppercase font-semibold mb-4">
+            Navegação
+          </p>
+          <ul className="space-y-2">
+            {[
+              { href: "/", label: "Início" },
+              { href: "/como-doar", label: "Como Doar" },
+              { href: "/transparencia", label: "Transparência" },
+              { href: "/faq", label: "Perguntas Frequentes" },
+            ].map((link) => (
+              <li key={link.href}>
+                <Link href={link.href} className="text-svp-cream/60 hover:text-svp-cream text-sm transition-colors">
+                  {link.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Coluna 3 — Contato */}
         <div>
           <p className="text-svp-cream text-xs tracking-[0.18em] uppercase font-semibold mb-4">
             Contato & Localização

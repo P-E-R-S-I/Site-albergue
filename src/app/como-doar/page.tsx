@@ -144,21 +144,25 @@ export default async function ComoDoarPage() {
               )}
               {itensNecessarios.map((i, idx) => (
                 <li key={idx} className="flex items-center gap-3">
-                  {i.urgente ? (
-                    <AlertTriangle size={15} className="text-svp-sienna flex-shrink-0" />
-                  ) : (
-                    <CheckCircle2 size={15} className="text-svp-forest flex-shrink-0" />
-                  )}
+                  <AlertTriangle
+                    size={15}
+                    className={`flex-shrink-0 ${i.nivel === "critico" ? "text-svp-sienna" : "text-svp-amber"}`}
+                  />
                   <span className="text-svp-brown text-sm">{i.item}</span>
-                  {i.urgente && (
+                  {i.nivel === "critico" ? (
                     <span className="badge-urgente ml-auto">urgente</span>
+                  ) : (
+                    <span className="ml-auto text-[10px] font-bold uppercase tracking-wide text-svp-amber border border-svp-amber/40 rounded-full px-2 py-0.5">
+                      atenção
+                    </span>
                   )}
                 </li>
               ))}
             </ul>
             <p className="text-svp-muted text-xs mt-5 border-t border-svp-border pt-4">
-              Lista atualizada pela equipe do Albergue. Itens marcados como{" "}
-              <strong className="text-svp-sienna">urgente</strong> estão abaixo do estoque mínimo.
+              Lista atualizada pela equipe do Albergue.{" "}
+              <strong className="text-svp-sienna">Urgente</strong> = abaixo do estoque mínimo ·{" "}
+              <strong className="text-svp-amber">atenção</strong> = abaixo do recomendado.
             </p>
           </div>
 

@@ -30,7 +30,8 @@ export interface ItemEstoque {
   quantidade: number;
   unidade: string;
   categoria: string;
-  minimo: number; // heurística no client enquanto Frente 1 não persiste minimo
+  minimo: number;              // itens.quantidade_minima — abaixo disso: crítico
+  recomendado: number | null;  // itens.quantidade_recomendada — abaixo disso: atenção (null = 2× mínimo)
 }
 
 export interface DoacaoMensal {
@@ -57,7 +58,9 @@ export interface Faq {
 
 export interface ItemNecessario {
   item: string;
-  urgente: boolean;
+  // Definido pelo app de gestão por item: total < mínimo → "critico" (urgente);
+  // total < recomendado → "atencao". Vem pronto da view_itens_necessarios.
+  nivel: "critico" | "atencao";
 }
 
 // Informações institucionais — tabela site_config (chave/valor), editada pelo
@@ -136,6 +139,7 @@ export async function getEstoqueAtual(): Promise<ItemEstoque[]> {
       unidade: p.unidade,
       categoria: "—",
       minimo: p.minimo,
+      recomendado: null,
     }));
   };
 
@@ -143,7 +147,7 @@ export async function getEstoqueAtual(): Promise<ItemEstoque[]> {
 
   const { data, error } = await supabase
     .from("view_estoque_atual")
-    .select("item, quantidade_atual, unidade_medida, categoria, quantidade_minima")
+    .select("item, quantidade_atual, unidade_medida, categoria, quantidade_minima, quantidade_recomendada")
     .order("quantidade_atual", { ascending: true });
 
   if (error || !data) {
@@ -156,7 +160,8 @@ export async function getEstoqueAtual(): Promise<ItemEstoque[]> {
     quantidade: Number(row.quantidade_atual ?? 0),
     unidade: row.unidade_medida ?? "un",
     categoria: row.categoria ?? "—",
-    minimo: Number(row.quantidade_minima ?? 5), // critério definido pelo app (itens.quantidade_minima)
+    minimo: Number(row.quantidade_minima ?? 5),
+    recomendado: row.quantidade_recomendada != null ? Number(row.quantidade_recomendada) : null,
   }));
 }
 
@@ -335,19 +340,21 @@ export async function getEstatisticas(): Promise<EstatisticasAlbergue> {
 export async function getItensNecessarios(): Promise<ItemNecessario[]> {
   const fallback = async (): Promise<ItemNecessario[]> => {
     const { PLACEHOLDER_ITENS_MAIS_NECESSARIOS } = await import("./dados-placeholder");
-    return PLACEHOLDER_ITENS_MAIS_NECESSARIOS;
+    return PLACEHOLDER_ITENS_MAIS_NECESSARIOS.map((p): ItemNecessario => ({
+      item: p.item,
+      nivel: p.urgente ? "critico" : "atencao",
+    }));
   };
 
   if (USE_MOCK) return fallback();
 
   const { data, error } = await supabase
     .from("view_itens_necessarios")
-    .select("item, quantidade, categoria")
+    .select("item, quantidade, categoria, nivel")
     .order("quantidade", { ascending: true })
     .limit(8);
 
-  // Só cai no placeholder em ERRO real. Lista vazia = estoque saudável (boa notícia),
-  // não motivo para exibir necessidades falsas.
+  // Só cai no placeholder em ERRO real. Lista vazia = nada abaixo do recomendado.
   if (error || !data) {
     console.warn("[getItensNecessarios] fallback placeholder:", error?.message);
     return fallback();
@@ -355,6 +362,6 @@ export async function getItensNecessarios(): Promise<ItemNecessario[]> {
 
   return data.map((r) => ({
     item: r.item ?? "Item",
-    urgente: Number(r.quantidade ?? 0) <= 5,
+    nivel: r.nivel === "critico" ? "critico" : "atencao",
   }));
 }

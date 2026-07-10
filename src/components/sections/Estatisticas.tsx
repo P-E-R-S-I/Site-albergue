@@ -1,34 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { Users, UserCheck, Calendar, Home } from "lucide-react";
-import { PLACEHOLDER_ESTATISTICAS } from "@/lib/dados-placeholder";
-
-const STATS = [
-  {
-    icon: <Home size={22} className="text-svp-sienna" />,
-    valor: PLACEHOLDER_ESTATISTICAS.idososAtendidos,
-    label: "Idosos acolhidos",
-    sufixo: "",
-  },
-  {
-    icon: <UserCheck size={22} className="text-svp-forest" />,
-    valor: PLACEHOLDER_ESTATISTICAS.voluntariosAtivos,
-    label: "Voluntários ativos",
-    sufixo: "+",
-  },
-  {
-    icon: <Calendar size={22} className="text-svp-amber" />,
-    valor: PLACEHOLDER_ESTATISTICAS.anosDeServico,
-    label: "Anos de serviço",
-    sufixo: "",
-  },
-  {
-    icon: <Users size={22} className="text-svp-sage" />,
-    valor: PLACEHOLDER_ESTATISTICAS.familiasBeneficiadas,
-    label: "Famílias beneficiadas",
-    sufixo: "",
-  },
-];
+import type { EstatisticasAlbergue } from "@/lib/supabase";
 
 function Counter({ target, suffix }: { target: number; suffix: string }) {
   const [value, setValue] = useState(0);
@@ -66,33 +38,54 @@ function Counter({ target, suffix }: { target: number; suffix: string }) {
   );
 }
 
-export default function Estatisticas() {
+export default function Estatisticas({ stats }: { stats: EstatisticasAlbergue }) {
+  const STATS = [
+    {
+      valor: stats.idososAtendidos,
+      label: "Idosos acolhidos",
+      sufixo: "",
+      cor: "text-white",
+    },
+    {
+      valor: stats.voluntariosAtivos,
+      label: "Voluntários ativos",
+      sufixo: "+",
+      cor: "text-svp-gold",
+    },
+    {
+      valor: stats.anosDeServico,
+      label: "Anos de serviço",
+      sufixo: "",
+      cor: "text-white",
+    },
+    {
+      valor: stats.familiasBeneficiadas,
+      label: "Famílias beneficiadas",
+      sufixo: "",
+      cor: "text-svp-gold",
+    },
+  ];
   return (
-    <section className="bg-svp-linen border-y border-svp-border py-20">
+    <section className="bg-svp-forest py-10 lg:py-16">
       <div className="max-w-6xl mx-auto px-5 lg:px-8">
         <p
-          className="text-center text-svp-muted text-xs tracking-[0.22em] uppercase mb-12 font-semibold"
+          className="text-center text-white/60 text-[10px] lg:text-xs tracking-[0.2em] uppercase mb-7 lg:mb-10 font-semibold"
           data-animate
         >
           Nosso impacto em números
         </p>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-3 gap-y-6 lg:gap-8">
           {STATS.map((stat, i) => (
             <div
               key={i}
-              className="text-center group"
+              className="text-center"
               data-animate
               data-delay={String(i + 1)}
             >
-              <div className="flex justify-center mb-4">
-                <div className="w-12 h-12 rounded-full bg-svp-cream border border-svp-border flex items-center justify-center group-hover:scale-110 group-hover:border-svp-sienna/40 transition-all duration-300">
-                  {stat.icon}
-                </div>
-              </div>
-              <p className="font-display text-4xl md:text-5xl text-svp-dark font-bold">
+              <p className={`font-display text-4xl lg:text-5xl font-bold leading-none ${stat.cor}`}>
                 <Counter target={stat.valor} suffix={stat.sufixo} />
               </p>
-              <p className="text-svp-muted text-sm mt-2">{stat.label}</p>
+              <p className="text-white/70 text-xs lg:text-sm mt-1.5">{stat.label}</p>
             </div>
           ))}
         </div>

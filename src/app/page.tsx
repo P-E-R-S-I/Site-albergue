@@ -2,13 +2,12 @@ import type { Metadata } from "next";
 import Hero from "@/components/sections/Hero";
 import Estatisticas from "@/components/sections/Estatisticas";
 import Missao from "@/components/sections/Missao";
-import ZoomWordSection from "@/components/ZoomWordSection";
 import Depoimentos from "@/components/sections/Depoimentos";
 import ComoAjudar from "@/components/sections/ComoAjudar";
 import InstagramCarrossel from "@/components/sections/InstagramCarrossel";
 import Link from "next/link";
-import { ArrowRight, MapPin, Phone, Clock } from "lucide-react";
-import { PLACEHOLDER_INFO_ALBERGUE } from "@/lib/dados-placeholder";
+import { ArrowRight } from "lucide-react";
+import { getInfoAlbergue, getEstatisticas, getDoacoesMensais } from "@/lib/supabase";
 import { buildMetadata, SITE_NAME } from "@/lib/seo";
 
 export const metadata: Metadata = {
@@ -25,71 +24,79 @@ export const metadata: Metadata = {
   title: "Início",
 };
 
-export default function HomePage() {
+export default async function HomePage() {
+  const [info, stats, doacoesMensais] = await Promise.all([
+    getInfoAlbergue(),
+    getEstatisticas(),
+    getDoacoesMensais(),
+  ]);
+  // Card "Este mês" do Hero: só usa o valor se a última posição da série for
+  // de fato o mês corrente (o fallback de placeholder termina em meses antigos).
+  // Formata aqui (servidor) para evitar divergência de ICU na hidratação.
+  const MESES = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
+  const hoje = new Date();
+  const mesAtualLabel = `${MESES[hoje.getMonth()]}/${String(hoje.getFullYear()).slice(2)}`;
+  const ultima = doacoesMensais[doacoesMensais.length - 1];
+  const doacaoMesFmt =
+    ultima && ultima.mes === mesAtualLabel && ultima.valor > 0
+      ? ultima.valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL", maximumFractionDigits: 0 })
+      : null;
+
   return (
     <>
-      <Hero />
+      <Hero info={info} stats={stats} doacaoMes={doacaoMesFmt} />
 
-      <Estatisticas />
-
-      {/* Wave divider */}
-      <div className="wave-divider bg-svp-linen" style={{ marginBottom: "-2px" }}>
-        <svg viewBox="0 0 1440 60" preserveAspectRatio="none" style={{ height: 60 }}>
-          <path d="M0,30 C360,60 1080,0 1440,30 L1440,60 L0,60 Z" fill="#F6EFE3" />
-        </svg>
-      </div>
+      <Estatisticas stats={stats} />
 
       <Missao />
 
-      <ZoomWordSection />
-
       <Depoimentos />
 
-      <ComoAjudar />
+      <ComoAjudar whatsapp={info.whatsapp} />
 
       <InstagramCarrossel />
 
       {/* Seção de localização */}
-      <section className="bg-svp-cream py-20">
-        <div className="max-w-6xl mx-auto px-5 lg:px-8 grid lg:grid-cols-2 gap-12 items-center">
+      <section className="bg-svp-cream py-14 lg:py-24">
+        <div className="max-w-6xl mx-auto px-5 lg:px-8 grid lg:grid-cols-2 gap-8 lg:gap-12 items-start">
           <div>
-            <div className="flex items-center gap-3 mb-6" data-animate>
-              <div className="h-px w-10 bg-svp-amber" />
-              <span className="text-svp-amber text-xs tracking-[0.22em] uppercase font-semibold">
-                Onde estamos
-              </span>
-            </div>
+            <span
+              className="text-svp-sienna text-[10px] lg:text-xs tracking-[0.2em] uppercase font-bold block mb-2"
+              data-animate
+            >
+              Onde estamos
+            </span>
             <h2
-              className="font-display text-4xl text-svp-dark font-semibold mb-4"
+              className="font-display text-[26px] leading-[1.15] md:text-4xl lg:text-5xl text-svp-dark font-bold mb-3 lg:mb-4"
               data-animate data-delay="1"
             >
               Venha nos conhecer{" "}
-              <em className="text-svp-sienna">pessoalmente.</em>
+              <em className="text-svp-sienna not-italic">pessoalmente.</em>
             </h2>
-            <p className="text-svp-brown leading-relaxed mb-8" data-animate data-delay="2">
+            <p className="text-svp-brown text-[14.5px] lg:text-base leading-relaxed mb-5" data-animate data-delay="2">
               Estamos localizados em Jataí, GO. Se você está pensando em fazer uma visita
               para trazer doações ou conhecer o Albergue, entre em contato antes para
               confirmar o melhor horário.
             </p>
-            <ul className="space-y-4 mb-8" data-animate data-delay="3">
-              <li className="flex items-start gap-3">
-                <MapPin size={18} className="text-svp-sienna mt-0.5 flex-shrink-0" />
-                <span className="text-svp-brown">{PLACEHOLDER_INFO_ALBERGUE.endereco}</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <Phone size={18} className="text-svp-sienna mt-0.5 flex-shrink-0" />
-                <span className="text-svp-brown">{PLACEHOLDER_INFO_ALBERGUE.telefone}</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <Clock size={18} className="text-svp-sienna mt-0.5 flex-shrink-0" />
-                <span className="text-svp-brown">{PLACEHOLDER_INFO_ALBERGUE.horarioVisitas}</span>
-              </li>
-            </ul>
+
+            {/* Vídeo tour do Albergue */}
+            <div className="mb-5" data-animate data-delay="3">
+              <video
+                src="/tour.mp4"
+                controls
+                className="rounded-2xl w-full max-w-md border border-svp-border shadow-md"
+                poster="/foto-hero.jpg"
+              >
+                Seu navegador não suporta vídeo HTML5.
+              </video>
+              <p className="text-svp-muted text-xs mt-2">🎥 Tour pelo Albergue</p>
+            </div>
+
             <a
-              href={PLACEHOLDER_INFO_ALBERGUE.whatsapp}
+              href={info.whatsapp}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 bg-svp-sienna text-white font-semibold text-sm px-6 py-3 rounded-full hover:bg-svp-rose transition-colors"
+              className="inline-flex items-center justify-center gap-2 bg-svp-dark text-svp-cream font-semibold text-sm px-6 py-3 rounded-xl hover:bg-svp-brown transition-colors w-full sm:w-auto"
               data-animate data-delay="4"
             >
               Agendar pelo WhatsApp <ArrowRight size={14} />
@@ -97,11 +104,11 @@ export default function HomePage() {
           </div>
 
           <div
-            className="rounded-2xl overflow-hidden border border-svp-border h-80"
+            className="rounded-2xl overflow-hidden border-2 border-svp-dark h-64 lg:h-full lg:min-h-[420px]"
             data-animate data-delay="2"
           >
             <iframe
-              src="https://www.google.com/maps?q=-17.8624477,-51.718235&z=16&output=embed"
+              src={`https://www.google.com/maps?q=${encodeURIComponent(info.endereco)}&z=16&output=embed`}
               width="100%"
               height="100%"
               style={{ border: 0 }}
@@ -115,28 +122,28 @@ export default function HomePage() {
       </section>
 
       {/* Faixa final de CTA */}
-      <section className="bg-svp-forest py-16">
-        <div className="max-w-3xl mx-auto px-5 text-center">
+      <section className="bg-svp-sienna py-14 lg:py-20">
+        <div className="max-w-3xl mx-auto px-6 text-center">
           <p
-            className="font-display text-3xl md:text-4xl text-white italic mb-4"
+            className="font-display text-[26px] leading-[1.25] md:text-4xl text-white italic mb-3"
             data-animate
           >
             Pequenas ações, grande impacto.
           </p>
-          <p className="text-white/70 mb-8 leading-relaxed" data-animate data-delay="1">
+          <p className="text-white/75 text-[13.5px] lg:text-base mb-6 lg:mb-8 leading-relaxed" data-animate data-delay="1">
             Cada fraldinha, cada quilo de arroz, cada real doado chega diretamente às mãos
             de quem mais precisa. Nosso painel de transparência garante isso.
           </p>
-          <div className="flex flex-wrap justify-center gap-4" data-animate data-delay="2">
+          <div className="flex flex-col sm:flex-row justify-center gap-2.5 sm:gap-4" data-animate data-delay="2">
             <Link
               href="/como-doar"
-              className="bg-white text-svp-forest font-semibold text-sm px-8 py-3.5 rounded-full hover:bg-svp-cream transition-colors"
+              className="bg-white text-svp-sienna font-bold text-sm px-8 py-3.5 rounded-xl hover:bg-svp-cream transition-colors"
             >
               Como doar
             </Link>
             <Link
               href="/transparencia"
-              className="border border-white/40 text-white font-semibold text-sm px-8 py-3.5 rounded-full hover:border-white/80 transition-colors"
+              className="border border-white/45 text-white font-semibold text-sm px-8 py-3.5 rounded-xl hover:border-white/80 transition-colors"
             >
               Ver transparência <ArrowRight size={14} className="inline ml-1" />
             </Link>

@@ -18,6 +18,7 @@ const config: Config = {
           forest:  "#2D5A27", // verde floresta — cor secundária
           sage:    "#4A7E43", // verde mais claro (hover)
           amber:   "#B8892A", // dourado âmbar — destaque
+          gold:    "#E8C06A", // dourado claro — acento sobre fundos escuros
           dark:    "#18120B", // quase-preto quente
           brown:   "#4A3728", // marrom médio
           muted:   "#8A7464", // texto secundário

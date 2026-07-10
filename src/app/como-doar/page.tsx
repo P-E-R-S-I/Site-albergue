@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Heart, AlertTriangle, CheckCircle2, MapPin, Package } from "lucide-react";
-import { PLACEHOLDER_INFO_ALBERGUE } from "@/lib/dados-placeholder";
-import { getItensNecessarios } from "@/lib/supabase";
+import { getItensNecessarios, getInfoAlbergue } from "@/lib/supabase";
 import RealtimeRefresher from "@/components/RealtimeRefresher";
 import Image from "next/image";
 import PixCopyButton from "@/components/PixCopyButton";
@@ -17,8 +16,16 @@ export const metadata: Metadata = buildMetadata({
 // Lê do estoque real (view_itens_necessarios) a cada requisição.
 export const dynamic = "force-dynamic";
 
+// Chave codificada na imagem estática /qr-pix.png (QR fornecido pelo albergue).
+// Se a chave Pix for alterada no app de gestão, o QR deixa de ser exibido para
+// não divergir do botão de copiar — até uma nova imagem ser gerada.
+const QR_PIX_CHAVE = "02.251.270/0001-09";
+
 export default async function ComoDoarPage() {
-  const itensNecessarios = await getItensNecessarios();
+  const [itensNecessarios, info] = await Promise.all([
+    getItensNecessarios(),
+    getInfoAlbergue(),
+  ]);
   return (
     <div className="bg-svp-cream min-h-screen">
       {/* "O que mais precisamos" atualiza ao vivo conforme o estoque muda no banco */}
@@ -66,20 +73,22 @@ export default async function ComoDoarPage() {
             </div>
 
             {/* QR Code real — Pix do Albergue */}
-            <div className="flex justify-center mb-5">
-              <div className="rounded-2xl overflow-hidden border border-svp-border shadow-sm bg-white p-3">
-                <Image
-                  src="/qr-pix.png"
-                  alt="QR Code Pix — Albergue São Vicente de Paulo"
-                  width={200}
-                  height={200}
-                  className="block"
-                  priority
-                />
+            {info.pixKey === QR_PIX_CHAVE && (
+              <div className="flex justify-center mb-5">
+                <div className="rounded-2xl overflow-hidden border border-svp-border shadow-sm bg-white p-3">
+                  <Image
+                    src="/qr-pix.png"
+                    alt="QR Code Pix — Albergue São Vicente de Paulo"
+                    width={200}
+                    height={200}
+                    className="block"
+                    priority
+                  />
+                </div>
               </div>
-            </div>
+            )}
 
-            <PixCopyButton pixKey={PLACEHOLDER_INFO_ALBERGUE.pixKey} />
+            <PixCopyButton pixKey={info.pixKey} />
 
             <p className="text-svp-muted text-xs mt-3">
               Após a transferência, todas as doações são lançadas no painel de
@@ -96,11 +105,11 @@ export default async function ComoDoarPage() {
             <p className="font-semibold text-svp-dark mb-3">Depósito bancário</p>
             <div className="space-y-2 text-sm">
               {[
-                ["Banco", PLACEHOLDER_INFO_ALBERGUE.banco],
-                ["Agência", PLACEHOLDER_INFO_ALBERGUE.agencia],
-                ["Conta", PLACEHOLDER_INFO_ALBERGUE.conta],
-                ["CNPJ", PLACEHOLDER_INFO_ALBERGUE.pixKey],
-                ["Titular", PLACEHOLDER_INFO_ALBERGUE.titular],
+                ["Banco", info.banco],
+                ["Agência", info.agencia],
+                ["Conta", info.conta],
+                ["CNPJ", info.cnpj],
+                ["Titular", info.titular],
               ].map(([label, val]) => (
                 <div key={label} className="flex gap-4 items-start">
                   <span className="text-svp-muted shrink-0 w-16">{label}</span>
@@ -128,27 +137,32 @@ export default async function ComoDoarPage() {
                 <li className="flex items-center gap-3">
                   <CheckCircle2 size={15} className="text-svp-forest flex-shrink-0" />
                   <span className="text-svp-brown text-sm">
-                    No momento o estoque está em bom nível — qualquer doação é bem-vinda!
+                    A equipe está atualizando a lista de necessidades — toda doação é
+                    bem-vinda! Na dúvida, fale conosco pelo WhatsApp.
                   </span>
                 </li>
               )}
               {itensNecessarios.map((i, idx) => (
                 <li key={idx} className="flex items-center gap-3">
-                  {i.urgente ? (
-                    <AlertTriangle size={15} className="text-svp-sienna flex-shrink-0" />
-                  ) : (
-                    <CheckCircle2 size={15} className="text-svp-forest flex-shrink-0" />
-                  )}
+                  <AlertTriangle
+                    size={15}
+                    className={`flex-shrink-0 ${i.nivel === "critico" ? "text-svp-sienna" : "text-svp-amber"}`}
+                  />
                   <span className="text-svp-brown text-sm">{i.item}</span>
-                  {i.urgente && (
+                  {i.nivel === "critico" ? (
                     <span className="badge-urgente ml-auto">urgente</span>
+                  ) : (
+                    <span className="ml-auto text-[10px] font-bold uppercase tracking-wide text-svp-amber border border-svp-amber/40 rounded-full px-2 py-0.5">
+                      atenção
+                    </span>
                   )}
                 </li>
               ))}
             </ul>
             <p className="text-svp-muted text-xs mt-5 border-t border-svp-border pt-4">
-              Lista atualizada pela equipe do Albergue. Itens marcados como{" "}
-              <strong className="text-svp-sienna">urgente</strong> estão abaixo do estoque mínimo.
+              Lista atualizada pela equipe do Albergue.{" "}
+              <strong className="text-svp-sienna">Urgente</strong> = abaixo do estoque mínimo ·{" "}
+              <strong className="text-svp-amber">atenção</strong> = abaixo do recomendado.
             </p>
           </div>
 
@@ -163,11 +177,12 @@ export default async function ComoDoarPage() {
               entrar em contato antes para confirmar o horário mais conveniente.
             </p>
             <div className="bg-white/10 rounded-xl p-4 text-sm space-y-1 mb-5">
-              <p><span className="text-white/50">Endereço: </span>{PLACEHOLDER_INFO_ALBERGUE.endereco}</p>
-              <p><span className="text-white/50">Recebemos doações: </span>{PLACEHOLDER_INFO_ALBERGUE.horarioDoacoes}</p>
+              <p><span className="text-white/50">Endereço: </span>{info.endereco}</p>
+              <p><span className="text-white/50">Recebemos doações: </span>{info.horarioDoacoes}</p>
+              <p><span className="text-white/50">Pontos de coleta: </span>{info.pontosColeta}</p>
             </div>
             <a
-              href={PLACEHOLDER_INFO_ALBERGUE.whatsapp}
+              href={info.whatsapp}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center justify-center gap-2 bg-white text-svp-forest font-semibold text-sm px-5 py-3 rounded-full hover:bg-svp-cream transition-colors"

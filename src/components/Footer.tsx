@@ -1,48 +1,25 @@
 import Link from "next/link";
 import Image from "next/image";
-import { MapPin, Phone, Clock, Heart, Instagram, Mail } from "lucide-react";
-import { PLACEHOLDER_INFO_ALBERGUE } from "@/lib/dados-placeholder";
+import { MapPin, Phone, Clock, Instagram, Mail } from "lucide-react";
+import type { InfoAlbergue } from "@/lib/supabase";
 
 const INSTAGRAM_URL = "https://www.instagram.com/vicentedepaulodejatai";
 
-export default function Footer() {
+export default function Footer({ info }: { info: InfoAlbergue }) {
   return (
     <footer className="bg-svp-dark text-svp-cream/80">
-      {/* CTA faixa superior */}
-      <div className="bg-svp-sienna">
-        <div className="max-w-6xl mx-auto px-5 lg:px-8 py-10 flex flex-col md:flex-row items-center justify-between gap-6">
-          <div>
-            <p className="font-display text-2xl text-white italic">
-              Sua doação transforma vidas.
-            </p>
-            <p className="text-white/70 text-sm mt-1">
-              Cada contribuição, grande ou pequena, faz diferença para os nossos idosos.
-            </p>
-          </div>
-          <a
-            href={PLACEHOLDER_INFO_ALBERGUE.whatsapp}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-2 bg-white text-svp-sienna font-semibold text-sm px-6 py-3 rounded-full hover:bg-svp-cream transition-colors flex-shrink-0"
-          >
-            <Heart size={15} />
-            Falar pelo WhatsApp
-          </a>
-        </div>
-      </div>
-
       {/* Corpo do footer */}
-      <div className="max-w-6xl mx-auto px-5 lg:px-8 py-12 grid grid-cols-1 md:grid-cols-3 gap-10">
+      <div className="max-w-6xl mx-auto px-5 lg:px-8 py-10 lg:py-12 grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-10">
 
         {/* Coluna 1 — Identidade com logo real */}
         <div>
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-9 h-9 relative flex-shrink-0">
+            <div className="w-9 h-9 relative flex-shrink-0 rounded-full overflow-hidden ring-1 ring-white/15">
               <Image
                 src="/logo.png"
                 alt="Logo Albergue São Vicente de Paulo"
                 fill
-                className="object-contain"
+                className="object-cover"
               />
             </div>
             <p className="font-display text-svp-cream text-base font-semibold leading-tight">
@@ -51,7 +28,7 @@ export default function Footer() {
             </p>
           </div>
           <p className="text-svp-cream/60 text-sm leading-relaxed mb-5">
-            {PLACEHOLDER_INFO_ALBERGUE.missao}
+            {info.missao}
           </p>
           {/* Instagram link */}
           <a
@@ -94,41 +71,41 @@ export default function Footer() {
           <ul className="space-y-3">
             <li className="flex items-start gap-3">
               <MapPin size={15} className="text-svp-amber mt-0.5 flex-shrink-0" />
-              <span className="text-svp-cream/60 text-sm">{PLACEHOLDER_INFO_ALBERGUE.endereco}</span>
+              <span className="text-svp-cream/60 text-sm">{info.endereco}</span>
             </li>
             <li className="flex items-start gap-3">
               <Phone size={15} className="text-svp-amber mt-0.5 flex-shrink-0" />
               <a
-                href={`tel:${PLACEHOLDER_INFO_ALBERGUE.telefone.replace(/\D/g, "")}`}
+                href={`tel:${info.telefone.replace(/\D/g, "")}`}
                 className="text-svp-cream/60 hover:text-svp-cream text-sm transition-colors"
               >
-                {PLACEHOLDER_INFO_ALBERGUE.telefone}
+                {info.telefone}
               </a>
             </li>
             <li className="flex items-start gap-3">
               <Mail size={15} className="text-svp-amber mt-0.5 flex-shrink-0" />
               <a
-                href={`mailto:${PLACEHOLDER_INFO_ALBERGUE.email}`}
+                href={`mailto:${info.email}`}
                 className="text-svp-cream/60 hover:text-svp-cream text-sm transition-colors"
               >
-                {PLACEHOLDER_INFO_ALBERGUE.email}
+                {info.email}
               </a>
             </li>
             <li className="flex items-start gap-3">
               <Clock size={15} className="text-svp-amber mt-0.5 flex-shrink-0" />
               <span className="text-svp-cream/60 text-sm">
-                Visitas: {PLACEHOLDER_INFO_ALBERGUE.horarioVisitas}
+                Visitas: {info.horarioVisitas}
               </span>
             </li>
             <li className="flex items-start gap-3">
               <Clock size={15} className="text-svp-amber mt-0.5 flex-shrink-0" />
               <span className="text-svp-cream/60 text-sm">
-                Doações: {PLACEHOLDER_INFO_ALBERGUE.horarioDoacoes}
+                Doações: {info.horarioDoacoes}
               </span>
             </li>
           </ul>
-          <p className="text-svp-cream/30 text-xs mt-5 leading-relaxed">
-            {PLACEHOLDER_INFO_ALBERGUE.vinculo}
+          <p className="text-svp-cream/35 text-xs mt-5 leading-relaxed">
+            {info.vinculo}
           </p>
         </div>
       </div>

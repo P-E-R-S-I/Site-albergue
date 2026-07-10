@@ -144,24 +144,6 @@ export default async function TransparenciaPage() {
         </div>
 
         <EstoqueChart data={estoque} />
-
-        {/* Nota de transparência */}
-        <div className="mt-10 bg-svp-linen border border-svp-border rounded-2xl p-7">
-          <h3 className="font-display text-2xl text-svp-dark font-semibold mb-3">
-            Como funciona o registro?
-          </h3>
-          <p className="text-svp-brown text-sm leading-relaxed mb-3">
-            Utilizamos um sistema de <strong>banco de dados ledger</strong> — cada doação
-            que entra e cada produto que sai é registrado como um evento individual com
-            data, hora, quantidade e responsável pelo lançamento. Isso garante auditoria
-            completa e impossibilita alteração retroativa dos dados.
-          </p>
-          <p className="text-svp-brown text-sm leading-relaxed">
-            Os gráficos acima são gerados automaticamente a partir desses registros,
-            sem intervenção manual. Qualquer pessoa pode acompanhar o uso das doações
-            em tempo real.
-          </p>
-        </div>
       </div>
     </div>
   );

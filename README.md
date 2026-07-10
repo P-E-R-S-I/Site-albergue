@@ -15,6 +15,8 @@ O site tem dois objetivos principais:
 1. **Transparência pública** — mostrar para doadores e a comunidade o que o Albergue recebe, gasta e o que mais precisa, com dados em tempo real via Supabase.
 2. **Captação de doações** — apresentar o Albergue, explicar como doar (Pix, itens físicos, voluntariado) e facilitar o contato.
 
+Desde a última atualização, o site deixou de depender apenas de `dados-placeholder.ts` para as informações institucionais: endereço, telefone, WhatsApp, chave Pix, dados bancários, horários, missão e estatísticas de impacto agora são lidos em tempo real da tabela `site_config` do Supabase (populada pelo app de gestão da Frente 1), com o placeholder atuando só como fallback caso o banco esteja inacessível.
+
 Enquanto a Frente 1 não disponibiliza o banco de dados conectado, o site opera em **modo placeholder** (dados de exemplo embutidos no código), sem quebrar nenhuma funcionalidade.
 
 ---
@@ -70,22 +72,32 @@ Site-albergue-main/
 │   │       └── page.tsx            # Página "/faq" — perguntas frequentes com accordion
 │   │
 │   ├── components/
-│   │   ├── Header.tsx              # Cabeçalho fixo com logo, navegação desktop e menu hamburguer mobile
-│   │   ├── Footer.tsx              # Rodapé com CTA de doação, links de navegação e informações de contato
+│   │   ├── Header.tsx              # Cabeçalho fixo. Recebe `whatsapp` como prop (vem do site_config via
+│   │   │                           # layout.tsx) — logo, navegação desktop e menu hamburguer mobile
+│   │   ├── Footer.tsx              # Rodapé. Recebe `info: InfoAlbergue` como prop — missão, endereço,
+│   │   │                           # telefone, e-mail, horários e vínculo institucional, tudo dinâmico
+│   │   ├── ActionBarMobile.tsx     # Barra fixa no rodapé, visível só no mobile (`lg:hidden`): botão
+│   │   │                           # "Doar agora" + atalho para o WhatsApp. Recebe `whatsapp` como prop
 │   │   ├── ScrollAnimator.tsx      # Componente cliente: anima elementos [data-animate] ao entrar na tela
 │   │   │                           # e controla a barra de progresso de scroll (#scroll-progress)
-│   │   ├── PixCopyButton.tsx       # Botão que copia a chave Pix. Exibe Pop-up 1 ("Chave copiada!")
+│   │   ├── PixCopyButton.tsx       # Botão que copia a chave Pix (recebida via prop `pixKey`, vinda do
+│   │   │                           # site_config). Exibe Pop-up 1 ("Chave copiada!")
 │   │   │                           # e Pop-up 2 (agradecimento completo com estatísticas do Albergue)
 │   │   ├── RealtimeRefresher.tsx   # Componente cliente: assina mudanças no Supabase e chama router.refresh()
 │   │   │                           # para atualizar dados sem reload — usado nas páginas dinâmicas
 │   │   ├── ZoomWordSection.tsx     # Seção de efeito parallax/zoom na palavra "Dignidade" ao rolar a página
 │   │   │
 │   │   ├── sections/               # Seções da página inicial (cada uma é um bloco visual independente)
-│   │   │   ├── Hero.tsx            # Seção Hero: título, botões CTA, vídeo tour, foto institucional, parallax
-│   │   │   ├── Estatisticas.tsx    # 4 contadores animados (idosos, voluntários, anos, famílias)
+│   │   │   ├── Hero.tsx            # Seção Hero. Recebe `info`, `stats` e `doacaoMes` (já formatado em BRL
+│   │   │   │                       # pelo servidor) como props. Título, botões CTA, "card de info rápida"
+│   │   │   │                       # (endereço/visitas/telefone/doações) e card "Este mês" com o total
+│   │   │   │                       # arrecadado, exibido só quando há doações no mês corrente
+│   │   │   ├── Estatisticas.tsx    # 4 contadores animados (idosos, voluntários, anos, famílias). Recebe
+│   │   │   │                       # `stats: EstatisticasAlbergue` como prop — os números vêm do site_config
 │   │   │   ├── Missao.tsx          # Texto da missão + 3 cards dos pilares (Cuidado, Transparência, Comunidade)
 │   │   │   ├── Depoimentos.tsx     # Carrossel automático de depoimentos (troca a cada 5s)
-│   │   │   ├── ComoAjudar.tsx      # 3 cards das formas de ajudar (dinheiro, itens, voluntariado)
+│   │   │   ├── ComoAjudar.tsx      # 3 cards das formas de ajudar (dinheiro, itens, voluntariado). Recebe
+│   │   │   │                       # `whatsapp` como prop para o card de voluntariado
 │   │   │   ├── InstagramCarrossel.tsx  # Grade 3 colunas no desktop; carrossel com setas no mobile
 │   │   │   └── FAQAccordion.tsx    # Accordion de perguntas e respostas (recebe lista de FAQs como prop)
 │   │   │
@@ -101,10 +113,15 @@ Site-albergue-main/
 │       │                           # App Router onde openGraph de página sobrescreve o do layout pai)
 │       ├── supabase.ts             # Cliente Supabase + todas as funções de leitura de dados do banco.
 │       │                           # Inclui fallback automático para placeholder se as variáveis de ambiente
-│       │                           # não estiverem configuradas (modo mock/desenvolvimento offline)
+│       │                           # não estiverem configuradas (modo mock/desenvolvimento offline).
+│       │                           # Inclui também getInfoAlbergue() e getEstatisticas(), que leem a
+│       │                           # tabela `site_config` (chave/valor) e alimentam Header, Footer,
+│       │                           # ActionBarMobile e todas as páginas com dados institucionais dinâmicos
 │       └── dados-placeholder.ts    # Dados de exemplo usados enquanto o banco real não está conectado.
-│                                   # Inclui: doações mensais, gastos, estoque, FAQs, estatísticas e
-│                                   # informações de contato do Albergue (endereço, telefone, Pix, etc.)
+│                                   # Inclui: doações mensais, gastos, estoque, itens necessários, FAQs
+│                                   # (conteúdo real da visita de campo de 02–04/06/2026), estatísticas de
+│                                   # impacto (PLACEHOLDER_ESTATISTICAS) e informações institucionais
+│                                   # completas (PLACEHOLDER_INFO_ALBERGUE — espelha a tabela site_config)
 │
 ├── .env.local.example              # Modelo de variáveis de ambiente — copiar para .env.local
 ├── .gitignore                      # Ignora node_modules, .env.local, .next, etc.
@@ -123,26 +140,28 @@ Site-albergue-main/
 
 ### `/` — Página Inicial (`src/app/page.tsx`)
 
+Busca `getInfoAlbergue()`, `getEstatisticas()` e `getDoacoesMensais()` em paralelo no servidor. A partir da última doação registrada, calcula (ainda no servidor, para evitar divergência de hidratação) se o mês corrente já tem doações lançadas — se sim, exibe o card "Este mês" no Hero.
+
 Composta pelas seguintes seções, de cima para baixo:
 
-1. **Hero** — Título, parágrafo da missão, botões "Quero fazer uma doação" e "Ver transparência", vídeo tour do Albergue, foto institucional, e indicadores de impacto.
-2. **Estatisticas** — 4 contadores animados com ícones.
+1. **Hero** — Título, parágrafo da missão (dinâmico, vindo de `info.missao`), botões "Quero fazer uma doação" e "Ver transparência", card de informações rápidas (endereço, horário de visitas, telefone, horário de doações — todos vindos do `site_config`), card "Este mês" com total arrecadado (quando aplicável), e indicadores de impacto (`stats`).
+2. **Estatisticas** — 4 contadores animados com ícones, alimentados por `getEstatisticas()`.
 3. **Missao** — Texto descritivo + 3 cards dos pilares da instituição.
 4. **ZoomWordSection** — Efeito visual com a palavra "Dignidade" crescendo ao rolar (ocupa 250vh de altura).
 5. **Depoimentos** — Carrossel automático com 4 depoimentos reais.
 6. **ComoAjudar** — Cards de doação em dinheiro, itens físicos e voluntariado.
 7. **InstagramCarrossel** — 6 fotos do perfil do Instagram, linkadas para o perfil.
-8. **Localização** — Endereço, telefone e horário + mapa embutido do Google Maps.
+8. **Localização** — Endereço, telefone e horário + mapa embutido do Google Maps, gerado dinamicamente a partir de `info.endereco` (`encodeURIComponent` na URL do embed — se o endereço mudar no `site_config`, o mapa acompanha automaticamente).
 9. **Faixa CTA final** — Chamada para ação com links para /como-doar e /transparencia.
 
 ---
 
 ### `/como-doar` — Como Doar (`src/app/como-doar/page.tsx`)
 
-Renderização dinâmica (`force-dynamic`) — não é cacheada para sempre refletir o estoque atual.
+Renderização dinâmica (`force-dynamic`) — não é cacheada para sempre refletir o estoque atual. Busca `getItensNecessarios()` e `getInfoAlbergue()` em paralelo.
 
-- **Coluna 1 — Doação em dinheiro:** QR Code Pix, botão de copiar chave Pix (CNPJ), e dados bancários para depósito (Sicoob agência 5014, conta 6696).
-- **Coluna 2 — Itens físicos:** Lista dos itens mais necessários no momento (buscada do Supabase via `getItensNecessarios()`), com badge "urgente" para itens abaixo do estoque mínimo. Inclui endereço e horário do ponto de coleta.
+- **Coluna 1 — Doação em dinheiro:** QR Code Pix (só é exibido se `info.pixKey` bater exatamente com a chave codificada na imagem estática `qr-pix.png` — evita mostrar um QR desatualizado se a chave for trocada no app de gestão), botão de copiar chave Pix (`PixCopyButton` recebe `pixKey` como prop), e dados bancários para depósito — banco, agência, conta, CNPJ e titular, todos lidos de `info` (dinâmico via `site_config`).
+- **Coluna 2 — Itens físicos:** Lista dos itens mais necessários no momento (`getItensNecessarios()`), com dois níveis de urgência: badge **"urgente"** para itens com `nivel: "critico"` (abaixo do estoque mínimo) e badge **"atenção"** para `nivel: "atencao"` (abaixo do recomendado, mas acima do mínimo). Inclui endereço, horário de recebimento de doações e pontos de coleta (`info.pontosColeta`), todos dinâmicos.
 - Contém `<RealtimeRefresher />` para atualizar a lista de itens ao vivo quando o banco muda.
 
 ---
@@ -154,7 +173,7 @@ Renderização dinâmica (`force-dynamic`).
 - **4 cards de resumo do mês:** Doações em dinheiro, Gastos totais, Saldo do mês, Itens recebidos.
 - **Gráfico de Doações** (`DoacoesChart`) — barras dos últimos 6 meses.
 - **Gráfico de Gastos** (`GastosChart`) — área empilhada por categoria (alimentação, higiene, medicamentos, utilidades, manutenção).
-- **Gráfico de Estoque** (`EstoqueChart`) — barras de progresso mostrando nível atual de cada item.
+- **Gráfico de Estoque** (`EstoqueChart`) — barras de progresso mostrando nível atual de cada item, coloridas por três faixas: vermelho (`crítico`, abaixo de `minimo`), âmbar (`atenção`, abaixo de `recomendado`, que se não vier do banco assume `minimo × 2`) e verde (nível confortável).
 - **Seção explicativa** sobre como funciona o sistema de registro (banco de dados ledger).
 - Banner amarelo quando em modo mock, banner verde quando conectado ao banco real.
 - Contém `<RealtimeRefresher />` para atualizar os dados ao vivo.
@@ -165,9 +184,9 @@ Renderização dinâmica (`force-dynamic`).
 
 Renderização dinâmica (`force-dynamic`).
 
-- Accordion de perguntas e respostas, carregadas do Supabase via `getFaqs()` (ou do placeholder).
-- 7 perguntas no placeholder: horários, o que doar, como fazer Pix, voluntariado, vagas, acompanhamento médico e como acompanhar o uso das doações.
-- Card de CTA no final para falar com a equipe pelo WhatsApp.
+- Accordion de perguntas e respostas, carregadas do Supabase via `getFaqs()` (ou do placeholder). Busca `getFaqs()` e `getInfoAlbergue()` em paralelo.
+- 7 perguntas no placeholder (conteúdo real coletado na visita de campo de 02–04/06/2026): horários de visita, o que o Albergue aceita como doação, como fazer Pix, voluntariado, vagas de moradia, acompanhamento médico dos residentes e como acompanhar o uso das doações.
+- Card de CTA no final para falar com a equipe pelo WhatsApp — link dinâmico via `info.whatsapp`.
 
 ---
 
@@ -184,6 +203,7 @@ A paleta de cores está definida no `tailwind.config.ts` com o prefixo `svp-`:
 | `svp-forest`    | `#2D5A27`   | Cor secundária — verde floresta            |
 | `svp-sage`      | `#4A7E43`   | Verde claro — hover da cor secundária      |
 | `svp-amber`     | `#B8892A`   | Destaque — dourado âmbar                   |
+| `svp-gold`      | `#E8C06A`   | Dourado claro — acento sobre fundos escuros (Hero, Header) |
 | `svp-dark`      | `#18120B`   | Quase-preto quente (fundos escuros, texto) |
 | `svp-brown`     | `#4A3728`   | Marrom médio (texto de parágrafos)         |
 | `svp-muted`     | `#8A7464`   | Texto secundário / legendas                |
@@ -211,6 +231,14 @@ Ambas são carregadas via Google Fonts no `globals.css`.
 | **Contador animado** | Números contam do zero ao valor real ao entrar na viewport | `Estatisticas.tsx` |
 | **Carrossel de depoimentos** | Troca automaticamente a cada 5 segundos, com dots de navegação clicáveis | `Depoimentos.tsx` |
 | **Carrossel Instagram** | Grade 3 colunas no desktop; carrossel com setas e dots no mobile | `InstagramCarrossel.tsx` |
+
+---
+
+## Barra de Ação Mobile
+
+`src/components/ActionBarMobile.tsx` é uma barra fixa (`fixed inset-x-0 bottom-0`) no rodapé da tela, visível **só no mobile** (`lg:hidden` — some no desktop). Contém dois botões lado a lado: **"Doar agora"** (leva para `/como-doar`) e **WhatsApp** (link direto vindo de `info.whatsapp`).
+
+Renderizada uma única vez no `layout.tsx`, então aparece em todas as páginas. Para que o conteúdo da página não fique escondido atrás da barra, o `<body>` recebe `pb-[68px] lg:pb-0` — o padding reserva exatamente a altura da barra no mobile e é removido no desktop.
 
 ---
 
@@ -281,7 +309,7 @@ O site não detecta automaticamente quando um Pix é concluído (exigiria integr
 2. **Pop-up 1** — "Chave copiada!" com instrução para abrir o app do banco + botão **"Já fiz o Pix!"**
 3. Ao clicar em "Já fiz o Pix!", o **Pop-up 2** abre com agradecimento completo, 3 estatísticas do Albergue e link para o painel de transparência
 
-Tudo encapsulado em `src/components/PixCopyButton.tsx`.
+Tudo encapsulado em `src/components/PixCopyButton.tsx`, que recebe a chave via prop `pixKey` (vinda de `info.pixKey`, dinâmico) em vez de ter a chave fixa no código — se a chave Pix mudar no app de gestão, o botão de copiar acompanha automaticamente. O QR Code estático em `public/qr-pix.png`, porém, só é exibido na página `/como-doar` quando `info.pixKey` bate com a chave que está codificada na imagem (ver seção da página `/como-doar` acima).
 
 ---
 
@@ -364,13 +392,27 @@ Se `USE_MOCK` for `true`, todas as funções de dados importam de `dados-placeho
 
 | Função | View/Tabela consultada | O que retorna |
 |---|---|---|
-| `getEstoqueAtual()` | `view_estoque_atual` | Lista de itens com quantidade atual e mínima |
+| `getEstoqueAtual()` | `view_estoque_atual` | Lista de itens com quantidade atual, categoria, mínimo e recomendado |
 | `getDoacoesMensais()` | `view_doacoes_mensais` | Doações dos últimos 6 meses (dinheiro + itens) |
 | `getGastosMensais()` | `view_gastos_mensais` | Gastos dos últimos 6 meses por categoria |
 | `getFaqs()` | `faqs` | Perguntas e respostas com `ativo = true` |
-| `getItensNecessarios()` | `view_itens_necessarios` | Itens com estoque baixo (quantidade ≤ 10) |
+| `getItensNecessarios()` | `view_itens_necessarios` | Itens com estoque baixo, cada um com `nivel: "critico" \| "atencao"` |
+| `getInfoAlbergue()` | `site_config` | Dados institucionais completos (endereço, contato, dados bancários, horários, missão, vínculo) |
+| `getEstatisticas()` | `site_config` | Estatísticas de impacto (idosos atendidos, voluntários, ano de fundação, famílias beneficiadas) |
 
 Todas as funções têm fallback automático para placeholder em caso de erro no banco.
+
+### Dados institucionais dinâmicos (`site_config`)
+
+Diferente das views de doações/gastos/estoque (que vêm do ledger financeiro), as informações institucionais moram numa tabela simples de **chave/valor** chamada `site_config`, editável pelo app de gestão da equipe. `getSiteConfigMap()` busca essa tabela inteira de uma vez e é envolvida em `cache()` do React — isso deduplica a consulta entre o `layout.tsx` e a página que está sendo renderizada na mesma requisição, evitando duas idas ao banco para os mesmos dados.
+
+`getInfoAlbergue()` e `getEstatisticas()` fazem o *merge* dessa tabela com o fallback de `dados-placeholder.ts`: cada campo individual cai no placeholder se a chave correspondente não existir no banco, então o site nunca fica com um campo vazio mesmo com uma configuração parcial.
+
+Campos expostos por `getInfoAlbergue()` (interface `InfoAlbergue`): `nome`, `endereco`, `telefone`, `email`, `whatsapp`, `pixKey`, `cnpj`, `banco`, `agencia`, `conta`, `titular`, `horarioFuncionamento`, `horarioVisitas`, `horarioDoacoes`, `agendamentoVisitas`, `restricaoVisitas`, `pontosColeta`, `missao` e `vinculo`.
+
+Campos expostos por `getEstatisticas()` (interface `EstatisticasAlbergue`): `idososAtendidos`, `voluntariosAtivos`, `anoFundacao`, `anosDeServico` (calculado a partir do ano atual, nunca vem do banco) e `familiasBeneficiadas`.
+
+Esses dados alimentam `layout.tsx` (que repassa para `Header`, `Footer` e `ActionBarMobile`) e as quatro páginas (`page.tsx`, `como-doar`, `transparencia` só indiretamente via header/footer, e `faq`).
 
 ### Atualização em tempo real
 
@@ -391,20 +433,30 @@ NEXT_PUBLIC_USE_MOCK=true
 
 ## Dados de Contato do Albergue
 
-Todos os dados de contato estão centralizados em `src/lib/dados-placeholder.ts` na constante `PLACEHOLDER_INFO_ALBERGUE`. Editar apenas esse arquivo atualiza o site inteiro.
+Em produção (com o Supabase real conectado), esses dados vêm da tabela `site_config` e são editados pela equipe pelo app de gestão — **não** pelo código do site. `src/lib/dados-placeholder.ts`, na constante `PLACEHOLDER_INFO_ALBERGUE`, serve apenas como **fallback** para quando o banco estiver inacessível ou em desenvolvimento local sem Supabase configurado. Os valores abaixo refletem o placeholder atual (groundtruth da visita de campo de 02–04/06/2026):
 
-| Campo | Valor atual |
+| Campo | Valor atual (placeholder) |
 |---|---|
-| Endereço | Sit Betânia, 1, Zona Rural — Jataí, GO, 75800-000 |
+| Nome | Albergue São Vicente de Paulo |
+| Endereço | Rua Orozimbo Lopes de Carvalho, 1097, Dom Abel — Jataí, GO |
 | Telefone | (64) 99983-9893 |
 | E-mail | financeiroalbergue@gmail.com |
 | WhatsApp | https://wa.me/5564999839893 |
 | Chave Pix | 02.251.270/0001-09 (CNPJ) |
-| Banco | Sicoob, agência 5014, conta 6696 |
+| Banco / Agência / Conta | Sicoob, agência 5014, conta 6696 (Conta Corrente) |
+| Titular | Associação de Beneficentes Albergue São Vicente de Paulo |
+| Horário de funcionamento | 24 horas por dia, 7 dias por semana |
 | Horário de visitas | Todos os dias: 13h às 15h30 |
-| Horário de doações | Seg–Sex: 8h às 11h e 13h às 17h |
-| Instagram | @vicentedepaulodejatai |
+| Horário de doações | Todos os dias: 8h às 11h e 13h às 17h |
+| Agendamento de visitas | Não é necessário agendar |
+| Restrição de visitas | Suspensas temporariamente em surtos de viroses (gripe, Covid) |
+| Pontos de coleta | No próprio Albergue, na Autoescola 2000 (Centro) e no Varejão |
+| Missão | Oferecer acolhimento, cuidado e dignidade a idosos em situação de vulnerabilidade social |
+| Vínculo institucional | Instituição filantrópica de orientação espírita |
+| Instagram | @vicentedepaulodejatai (link fixo em `Footer.tsx`, não faz parte do `site_config`) |
 
+> **Atenção:** o endereço e o horário de doações mudaram desde a versão anterior do site (endereço era "Sit Betânia, 1, Zona Rural"; doações eram só de segunda a sexta). Se a Frente 1 ainda não populou o `site_config` com esses valores corrigidos, o site em produção pode estar exibindo dados desatualizados via placeholder até isso ser feito.
+>
 > O QR Code Pix (`public/qr-pix.png`) e o vídeo tour (`public/tour.mp4`) já são arquivos reais fornecidos pelo Albergue.
 
 ---
@@ -425,23 +477,27 @@ Regras para todos os colaboradores ao adicionar qualquer conteúdo ao site:
 
 ### Alta prioridade
 
-- [ ] **Conectar ao Supabase real** — adicionar `NEXT_PUBLIC_SUPABASE_URL` e `NEXT_PUBLIC_SUPABASE_ANON_KEY` no painel da Netlify
-- [ ] **Confirmar views do Supabase** — o código depende de `view_estoque_atual`, `view_doacoes_mensais`, `view_gastos_mensais`, `view_itens_necessarios` e da tabela `faqs`. A Frente 1 precisa confirmar que estão criadas e populadas
-- [ ] **Validar dados de contato** — confirmar com o Albergue se endereço, telefone, e-mail e horários estão corretos
-- [ ] **Rotacionar a chave Supabase** — a `ANON_KEY` no `.env.local.example` parece ser uma chave real. Regenerar no painel do Supabase e não versionar chaves reais
+- [ ] **Confirmar views e tabelas do Supabase** — o código depende de `view_estoque_atual`, `view_doacoes_mensais`, `view_gastos_mensais`, `view_itens_necessarios`, `site_config` e da tabela `faqs`. A Frente 1 precisa confirmar que estão criadas e populadas
 
 ### Média prioridade
 
-- [ ] **Atualizar fotos do carrossel Instagram** — substituir os arquivos `insta-1` a `insta-6` em `public/` por fotos mais recentes, ou adicionar novos e editar o array `FOTOS` em `InstagramCarrossel.tsx`
-- [ ] **Revisar depoimentos** — a constante `DEPOIMENTOS` em `Depoimentos.tsx` pode ser expandida
-- [ ] **Confirmar estatísticas** — os números em `PLACEHOLDER_ESTATISTICAS` (78 idosos, 100+ voluntários, 55 anos) devem ser validados com o Albergue
+- [ ] **Levar o Instagram para o `site_config`** — hoje o link `@vicentedepaulodejatai` está fixo (hardcoded) em `Footer.tsx`; faz sentido migrar para uma chave do `site_config` como os outros dados de contato, para não precisar de novo deploy se o perfil mudar
 
 ### Concluído
 
+- [x] **Conectar ao Supabase real** — adicionar `NEXT_PUBLIC_SUPABASE_URL` e `NEXT_PUBLIC_SUPABASE_ANON_KEY` no painel da Netlify
+- [x] **Popular o `site_config` com os dados corrigidos** — endereço novo (Rua Orozimbo Lopes de Carvalho, 1097, Dom Abel) e horário de doações diário (8h–11h e 13h–17h todos os dias, não só dias úteis) já constam no banco real
+- [x] **Rotacionar a chave Supabase** — a `ANON_KEY` real que estava em `.env.local.example` foi regenerada no painel do Supabase
+- [x] **Atualizar fotos do carrossel Instagram** — arquivos `insta-1` a `insta-6` em `public/` atualizados com fotos mais recentes
+- [x] **Revisar depoimentos** — a constante `DEPOIMENTOS` em `Depoimentos.tsx` foi revisada/expandida
+- [x] **Dados institucionais dinâmicos via `site_config`** — `getInfoAlbergue()` e `getEstatisticas()` substituem os dados fixos por leitura em tempo real do banco (com fallback para `dados-placeholder.ts`), aplicados em `layout.tsx`, `Header`, `Footer`, `ActionBarMobile`, Hero, Estatísticas e nas páginas `/como-doar` e `/faq`
+- [x] **Barra de ação fixa mobile** — `ActionBarMobile.tsx`, com CTA de doação e WhatsApp sempre visíveis no rodapé em telas pequenas
+- [x] **Dois níveis de urgência no estoque** — `view_itens_necessarios` e `EstoqueChart` agora distinguem "crítico" (abaixo do mínimo) de "atenção" (abaixo do recomendado), em vez de um único booleano "urgente"
+- [x] **Chave Pix e QR Code desacoplados do código** — `PixCopyButton` recebe `pixKey` como prop dinâmica; o QR Code estático só aparece quando bate com a chave configurada no banco
 - [x] **SEO e Open Graph** — centralizado em `src/lib/seo.ts` com `buildMetadata()`. Domínio correto (`site-albergue-sao-vincente.netlify.app`), imagem `og-image.jpg` em 1200×630px real, Open Graph e Twitter Card completos em todas as 4 rotas
 - [x] **Favicon** — arquivos em `public/` declarados via `metadata.icons` no `layout.tsx`; duplicatas removidas de `src/app/` para evitar conflito com o App Router
 - [x] **Agradecimento pós-Pix** — dois pop-ups em `PixCopyButton.tsx`
-- [x] **Google Maps** — mapa embutido na página inicial com coordenadas confirmadas
+- [x] **Google Maps** — mapa embutido na página inicial, gerado dinamicamente a partir do endereço em `site_config`
 - [x] **Correção de classes Tailwind inválidas** — substituídas opacidades `/3` e `/6` por `/5` nos componentes `FAQAccordion.tsx` e `Hero.tsx`
 
 ---
@@ -459,6 +515,9 @@ R: `src/components/Header.tsx` e `src/components/Footer.tsx`. Dados de contato v
 
 **P: O site está mostrando dados falsos. Como conecto ao banco real?**  
 R: Configure `NEXT_PUBLIC_SUPABASE_URL` e `NEXT_PUBLIC_SUPABASE_ANON_KEY` no `.env.local` (dev) ou no painel da Netlify (produção).
+
+**P: Preciso corrigir o endereço/telefone/horário do Albergue. Onde edito?**  
+R: Com o Supabase conectado, **não edite o código** — esses dados vêm da tabela `site_config` e devem ser corrigidos pelo app de gestão da equipe. `PLACEHOLDER_INFO_ALBERGUE` em `dados-placeholder.ts` só existe como fallback para quando o banco está fora do ar; editar apenas esse arquivo não muda o que aparece em produção se o `site_config` já estiver populado.
 
 **P: Como adiciono mais fotos ao carrossel do Instagram?**  
 R: Coloque a foto em `public/` (ex: `insta-7.webp`) e adicione um objeto no array `FOTOS` em `InstagramCarrossel.tsx`.

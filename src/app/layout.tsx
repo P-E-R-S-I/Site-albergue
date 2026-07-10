@@ -1,5 +1,11 @@
 import type { Metadata } from "next";
 import "./globals.css";
+// Fontes self-hospedadas (arquivos ficam dentro do próprio projeto, sem
+// nenhuma requisição externa ao Google Fonts — nem em build nem em runtime).
+// Isso elimina a cadeia de requisições bloqueante que causava o lag.
+import "@fontsource-variable/lora/wght.css";
+import "@fontsource-variable/lora/wght-italic.css";
+import "@fontsource-variable/plus-jakarta-sans/wght.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ActionBarMobile from "@/components/ActionBarMobile";
@@ -35,14 +41,16 @@ export const metadata: Metadata = {
   ],
   metadataBase: new URL(SITE_URL),
   // Favicon declarado explicitamente via metadata.icons apontando para public/
-  // (abordagem mais confiável no Netlify — arquivos em public/ chegam sempre no deploy)
+  // (abordagem mais confiável no Netlify — arquivos em public/ chegam sempre no deploy).
+  // O "?v=2" força o navegador a tratar como um arquivo novo — favicon é o recurso
+  // mais teimoso pra cache do navegador, ignora até header de cache-control às vezes.
   icons: {
     icon: [
-      { url: "/favicon.ico", sizes: "48x48", type: "image/x-icon" },
-      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/favicon.ico?v=2", sizes: "48x48", type: "image/x-icon" },
+      { url: "/icon-192.png?v=2", sizes: "192x192", type: "image/png" },
     ],
     apple: [
-      { url: "/apple-icon.png", sizes: "180x180", type: "image/png" },
+      { url: "/apple-icon.png?v=2", sizes: "180x180", type: "image/png" },
     ],
   },
 };

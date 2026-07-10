@@ -21,10 +21,10 @@ export default function Hero({
             src="/foto-hero.jpg"
             alt=""
             fill
-            className="object-cover opacity-45"
+            className="object-cover opacity-30"
             priority
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-svp-dark/60 via-svp-dark/82 to-svp-dark" />
+          <div className="absolute inset-0 bg-gradient-to-b from-svp-dark/55 via-svp-dark/80 to-svp-dark" />
         </div>
 
         <div className="relative max-w-6xl mx-auto px-5 lg:px-8 pt-10 pb-24 lg:pt-20 lg:pb-32">

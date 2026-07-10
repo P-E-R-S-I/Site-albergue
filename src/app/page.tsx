@@ -84,6 +84,7 @@ export default async function HomePage() {
               <video
                 src="/tour.mp4"
                 controls
+                preload="none"
                 className="rounded-2xl w-full max-w-md border border-svp-border shadow-md"
                 poster="/foto-hero.jpg"
               >

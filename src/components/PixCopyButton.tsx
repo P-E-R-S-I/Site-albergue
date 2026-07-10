@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Copy, Check, Heart, X, Sparkles } from "lucide-react";
+import confetti from "canvas-confetti";
 
 export default function PixCopyButton({ pixKey }: { pixKey: string }) {
   const [copied, setCopied] = useState(false);
@@ -24,9 +25,28 @@ export default function PixCopyButton({ pixKey }: { pixKey: string }) {
     setTimeout(() => setCopied(false), 2500);
   };
 
+  const fireConfetti = () => {
+    const cores = ["#803320", "#B8892A", "#E8C06A", "#2D5A27", "#F6EFE3"]; // paleta da marca
+    const disparo = (opts: confetti.Options) =>
+      confetti({
+        particleCount: 60,
+        spread: 70,
+        startVelocity: 42,
+        gravity: 0.9,
+        colors: cores,
+        zIndex: 200,
+        ...opts,
+      });
+
+    // Duas rajadas — uma de cada lado da tela, subindo em direção ao centro
+    disparo({ angle: 60, origin: { x: 0.08, y: 0.9 } });
+    disparo({ angle: 120, origin: { x: 0.92, y: 0.9 } });
+  };
+
   const handleConfirmPix = () => {
     setShowCopiedPopup(false);
     setShowThanksPopup(true);
+    fireConfetti();
   };
 
   return (

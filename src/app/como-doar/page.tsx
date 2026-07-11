@@ -11,6 +11,12 @@ export const metadata: Metadata = buildMetadata({
   description:
     "Saiba como fazer uma doação para o Albergue São Vicente de Paulo — Pix, itens físicos ou voluntariado.",
   path: "/como-doar",
+  image: {
+    url: "/og-como-doar.jpg",
+    width: 1200,
+    height: 630,
+    alt: "Como Doar — Albergue São Vicente de Paulo",
+  },
 });
 
 // Cache de 30s — ver comentário em src/app/layout.tsx.

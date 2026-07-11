@@ -17,6 +17,12 @@ export const metadata: Metadata = buildMetadata({
   description:
     "Acompanhe em tempo real as doações recebidas, os gastos e o nível de estoque do Albergue São Vicente de Paulo.",
   path: "/transparencia",
+  image: {
+    url: "/og-transparencia.jpg",
+    width: 1200,
+    height: 630,
+    alt: "Transparência — Albergue São Vicente de Paulo",
+  },
 });
 
 // Cache de 30s — ver comentário em src/app/layout.tsx.

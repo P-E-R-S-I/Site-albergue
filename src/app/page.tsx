@@ -10,6 +10,13 @@ import { ArrowRight } from "lucide-react";
 import { getInfoAlbergue, getEstatisticas, getDoacoesMensais } from "@/lib/supabase";
 import { buildMetadata, SITE_NAME } from "@/lib/seo";
 
+const OG_IMAGE_HOME = {
+  url: "/og-home.jpg",
+  width: 1200,
+  height: 630,
+  alt: "Cuidado, dignidade e esperança — Albergue São Vicente de Paulo",
+};
+
 // Cache de 30s — ver comentário em src/app/layout.tsx.
 export const revalidate = 30;
 
@@ -19,6 +26,7 @@ export const metadata: Metadata = {
     description:
       "Cuidado, dignidade e esperança para idosos em situação de vulnerabilidade em Jataí, GO. Saiba como ajudar e acompanhe nossa transparência.",
     path: "",
+    image: OG_IMAGE_HOME,
   }),
   title: "Início",
 };

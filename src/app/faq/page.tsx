@@ -11,6 +11,12 @@ export const metadata = buildMetadata({
   description:
     "Tire suas dúvidas sobre o Albergue São Vicente: doações, horários de visita, voluntariado e mais.",
   path: "/faq",
+  image: {
+    url: "/og-faq.jpg",
+    width: 1200,
+    height: 630,
+    alt: "Dúvidas frequentes — Albergue São Vicente de Paulo",
+  },
 });
 
 export default async function FAQPage() {

@@ -109,7 +109,7 @@ export default async function HomePage() {
             Pequenas ações, grande impacto.
           </p>
           <p className="text-white/75 text-[13.5px] lg:text-base mb-6 lg:mb-8 leading-relaxed" data-animate data-delay="1">
-            Cada fraldinha, cada quilo de arroz, cada real doado chega diretamente às mãos
+            Cada fralda, cada quilo de arroz, cada real doado chega diretamente às mãos
             de quem mais precisa. Nosso painel de transparência garante isso.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-2.5 sm:gap-4" data-animate data-delay="2">

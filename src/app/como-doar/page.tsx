@@ -33,16 +33,16 @@ export default async function ComoDoarPage() {
           <div className="absolute -top-20 -right-32 w-[500px] h-[500px] rounded-full bg-svp-sienna/10 blur-3xl" />
         </div>
         <div className="relative max-w-6xl mx-auto px-5 lg:px-8">
-          <div className="flex items-center gap-3 mb-4">
+          <div className="flex items-center gap-3 mb-4" data-animate>
             <div className="h-px w-10 bg-svp-amber" />
             <span className="text-svp-amber text-xs tracking-[0.22em] uppercase font-semibold">
               Contribua
             </span>
           </div>
-          <h1 className="font-display text-5xl text-svp-cream font-semibold">
+          <h1 className="font-display text-5xl text-svp-cream font-semibold" data-animate data-delay="1">
             Como <em className="text-svp-sienna">Doar</em>
           </h1>
-          <p className="text-svp-cream/60 mt-3 max-w-xl leading-relaxed">
+          <p className="text-svp-cream/60 mt-3 max-w-xl leading-relaxed" data-animate data-delay="2">
             Escolha a forma que for mais conveniente. Toda doação é registrada
             e publicada no nosso painel de transparência.
           </p>
@@ -52,11 +52,11 @@ export default async function ComoDoarPage() {
       <div className="max-w-6xl mx-auto px-5 lg:px-8 py-16 grid lg:grid-cols-2 gap-12">
 
         <div>
-          <h2 className="font-display text-3xl text-svp-dark font-semibold mb-8">
+          <h2 className="font-display text-3xl text-svp-dark font-semibold mb-8" data-animate>
             Doação em <em className="text-svp-amber">dinheiro</em>
           </h2>
 
-          <div className="bg-white border border-svp-border rounded-2xl p-7 mb-6">
+          <div className="bg-white border border-svp-border rounded-2xl p-7 mb-6" data-animate data-delay="1">
             <div className="flex items-center gap-3 mb-5">
               <div className="w-10 h-10 bg-svp-amber/15 rounded-full flex items-center justify-center">
                 <Heart size={20} className="text-svp-amber" />
@@ -94,7 +94,7 @@ export default async function ComoDoarPage() {
             </p>
           </div>
 
-          <div className="bg-white border border-svp-border rounded-2xl p-6">
+          <div className="bg-white border border-svp-border rounded-2xl p-6" data-animate data-delay="2">
             <p className="font-semibold text-svp-dark mb-3">Depósito bancário</p>
             <div className="space-y-2 text-sm">
               {[
@@ -114,11 +114,11 @@ export default async function ComoDoarPage() {
         </div>
 
         <div>
-          <h2 className="font-display text-3xl text-svp-dark font-semibold mb-8">
+          <h2 className="font-display text-3xl text-svp-dark font-semibold mb-8" data-animate>
             Itens e <em className="text-svp-sienna">alimentos</em>
           </h2>
 
-          <div className="bg-white border border-svp-border rounded-2xl p-7 mb-6">
+          <div className="bg-white border border-svp-border rounded-2xl p-7 mb-6" data-animate data-delay="1">
             <div className="flex items-center gap-2 mb-5">
               <Package size={18} className="text-svp-sienna" />
               <p className="font-semibold text-svp-dark">O que mais precisamos agora</p>
@@ -157,7 +157,7 @@ export default async function ComoDoarPage() {
             </p>
           </div>
 
-          <div className="bg-svp-forest text-white rounded-2xl p-7">
+          <div className="bg-svp-forest text-white rounded-2xl p-7" data-animate data-delay="2">
             <div className="flex items-center gap-3 mb-4">
               <MapPin size={20} className="text-white/60" />
               <p className="font-semibold">Ponto de coleta presencial</p>

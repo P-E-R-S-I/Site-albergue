@@ -23,16 +23,16 @@ export default async function FAQPage() {
           <div className="absolute -top-20 -right-32 w-[500px] h-[500px] rounded-full bg-svp-sienna/10 blur-3xl" />
         </div>
         <div className="relative max-w-3xl mx-auto px-5 lg:px-8">
-          <div className="flex items-center gap-3 mb-4">
+          <div className="flex items-center gap-3 mb-4" data-animate>
             <div className="h-px w-10 bg-svp-amber" />
             <span className="text-svp-amber text-xs tracking-[0.22em] uppercase font-semibold">
               Perguntas frequentes
             </span>
           </div>
-          <h1 className="font-display text-5xl text-svp-cream font-semibold">
+          <h1 className="font-display text-5xl text-svp-cream font-semibold" data-animate data-delay="1">
             Dúvidas <em className="text-svp-sienna">frequentes</em>
           </h1>
-          <p className="text-svp-cream/60 mt-3 leading-relaxed">
+          <p className="text-svp-cream/60 mt-3 leading-relaxed" data-animate data-delay="2">
             Reunimos as perguntas mais comuns que recebemos. Se a sua dúvida não estiver
             aqui, é só chamar no WhatsApp — respondemos rapidinho.
           </p>
@@ -42,7 +42,7 @@ export default async function FAQPage() {
       <div className="max-w-3xl mx-auto px-5 lg:px-8 py-16">
         <FAQAccordion faqs={faqs} />
 
-        <div className="mt-14 bg-svp-sienna rounded-2xl p-8 text-center">
+        <div className="mt-14 bg-svp-sienna rounded-2xl p-8 text-center" data-animate>
           <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
             <MessageCircle size={22} className="text-white" />
           </div>

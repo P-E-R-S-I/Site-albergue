@@ -44,8 +44,10 @@ export default function FAQAccordion({ faqs }: { faqs: Faq[] }) {
   }
   return (
     <div className="space-y-3">
-      {faqs.map((item) => (
-        <FAQItem key={item.id} pergunta={item.pergunta} resposta={item.resposta} />
+      {faqs.map((item, i) => (
+        <div key={item.id} data-animate data-delay={String(Math.min(i, 5))}>
+          <FAQItem pergunta={item.pergunta} resposta={item.resposta} />
+        </div>
       ))}
     </div>
   );

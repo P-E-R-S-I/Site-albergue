@@ -1,87 +1,111 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
-import HeroData from "@/components/sections/HeroData";
+import Hero from "@/components/sections/Hero";
+import Estatisticas from "@/components/sections/Estatisticas";
 import Missao from "@/components/sections/Missao";
 import Depoimentos from "@/components/sections/Depoimentos";
-import ComoAjudarData from "@/components/sections/ComoAjudarData";
+import ComoAjudar from "@/components/sections/ComoAjudar";
 import InstagramCarrossel from "@/components/sections/InstagramCarrossel";
-import LocalizacaoData from "@/components/sections/LocalizacaoData";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { getInfoAlbergue, getEstatisticas, getDoacoesMensais } from "@/lib/supabase";
 import { buildMetadata, SITE_NAME } from "@/lib/seo";
 
+// Cache de 30s — ver comentário em src/app/layout.tsx.
+export const revalidate = 30;
+
 export const metadata: Metadata = {
-  // Usa o nome completo da instituição no título social (og:title/twitter:title) —
-  // é isso que aparece no card do WhatsApp/Instagram, então precisa ser
-  // autoexplicativo, diferente do título curto da aba do navegador.
   ...buildMetadata({
     title: SITE_NAME,
     description:
       "Cuidado, dignidade e esperança para idosos em situação de vulnerabilidade em Jataí, GO. Saiba como ajudar e acompanhe nossa transparência.",
     path: "",
   }),
-  // Sobrescreve só o título da aba do navegador (não afeta openGraph/twitter acima).
   title: "Início",
 };
 
-// Skeleton do Hero — some assim que HeroData resolver.
-function HeroSkeleton() {
-  return (
-    <div className="animate-pulse">
-      <div className="bg-svp-dark py-24 lg:py-32">
-        <div className="max-w-6xl mx-auto px-5 lg:px-8">
-          <div className="max-w-2xl space-y-4">
-            <div className="h-5 w-40 bg-white/10 rounded-full" />
-            <div className="h-12 w-full bg-white/10 rounded-lg" />
-            <div className="h-12 w-3/4 bg-white/10 rounded-lg" />
-            <div className="h-4 w-full bg-white/10 rounded" />
-            <div className="h-4 w-2/3 bg-white/10 rounded" />
-            <div className="flex gap-3 pt-2">
-              <div className="h-12 w-44 bg-white/10 rounded-xl" />
-              <div className="h-12 w-40 bg-white/10 rounded-xl" />
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="relative z-10 max-w-6xl mx-auto px-5 lg:px-8 -mt-12 lg:-mt-16 mb-8 lg:mb-12">
-        <div className="bg-white rounded-2xl shadow-md h-28 lg:h-24" />
-      </div>
-    </div>
-  );
-}
+export default async function HomePage() {
+  const [info, stats, doacoesMensais] = await Promise.all([
+    getInfoAlbergue(),
+    getEstatisticas(),
+    getDoacoesMensais(),
+  ]);
 
-// HomePage não é mais async: nada aqui trava esperando o banco. As únicas
-// partes que dependem do Supabase (Hero/Estatísticas, ComoAjudar, Localização)
-// ficam isoladas em componentes próprios e entram via <Suspense>, então o
-// resto da página (que é 100% estático) chega pro navegador imediatamente.
-export default function HomePage() {
+  const MESES = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
+  const hoje = new Date();
+  const mesAtualLabel = `${MESES[hoje.getMonth()]}/${String(hoje.getFullYear()).slice(2)}`;
+  const ultima = doacoesMensais[doacoesMensais.length - 1];
+  const doacaoMesFmt =
+    ultima && ultima.mes === mesAtualLabel && ultima.valor > 0
+      ? ultima.valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL", maximumFractionDigits: 0 })
+      : null;
+
   return (
     <>
-      <Suspense fallback={<HeroSkeleton />}>
-        <HeroData />
-      </Suspense>
-
+      <Hero info={info} stats={stats} doacaoMes={doacaoMesFmt} />
+      <Estatisticas stats={stats} />
       <Missao />
-
       <Depoimentos />
-
-      <Suspense fallback={<div className="h-40 bg-svp-forest/10 animate-pulse" />}>
-        <ComoAjudarData />
-      </Suspense>
-
+      <ComoAjudar whatsapp={info.whatsapp} />
       <InstagramCarrossel />
 
-      <Suspense fallback={<div className="h-96 bg-svp-cream" />}>
-        <LocalizacaoData />
-      </Suspense>
+      <section className="bg-svp-cream py-14 lg:py-24">
+        <div className="max-w-6xl mx-auto px-5 lg:px-8 grid lg:grid-cols-2 gap-8 lg:gap-12 items-start">
+          <div>
+            <span className="text-svp-sienna text-[10px] lg:text-xs tracking-[0.2em] uppercase font-bold block mb-2" data-animate>
+              Onde estamos
+            </span>
+            <h2 className="font-display text-[26px] leading-[1.15] md:text-4xl lg:text-5xl text-svp-dark font-bold mb-3 lg:mb-4" data-animate data-delay="1">
+              Venha nos conhecer{" "}
+              <em className="text-svp-sienna not-italic">pessoalmente.</em>
+            </h2>
+            <p className="text-svp-brown text-[14.5px] lg:text-base leading-relaxed mb-5" data-animate data-delay="2">
+              Estamos localizados em Jataí, GO. Se você está pensando em fazer uma visita
+              para trazer doações ou conhecer o Albergue, entre em contato antes para
+              confirmar o melhor horário.
+            </p>
 
-      {/* Faixa final de CTA — 100% estática */}
+            <div className="mb-5" data-animate data-delay="3">
+              <video
+                src="/tour.mp4"
+                controls
+                preload="none"
+                className="rounded-2xl w-full max-w-md border border-svp-border shadow-md"
+                poster="/foto-hero.jpg"
+              >
+                Seu navegador não suporta vídeo HTML5.
+              </video>
+              <p className="text-svp-muted text-xs mt-2">🎥 Tour pelo Albergue</p>
+            </div>
+
+            <a
+              href={info.whatsapp}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 bg-svp-dark text-svp-cream font-semibold text-sm px-6 py-3 rounded-xl hover:bg-svp-brown transition-colors w-full sm:w-auto"
+              data-animate data-delay="4"
+            >
+              Agendar pelo WhatsApp <ArrowRight size={14} />
+            </a>
+          </div>
+
+          <div className="rounded-2xl overflow-hidden border-2 border-svp-dark h-64 lg:h-full lg:min-h-[420px]" data-animate data-delay="2">
+            <iframe
+              src={`https://www.google.com/maps?q=${encodeURIComponent(info.endereco)}&z=16&output=embed`}
+              width="100%"
+              height="100%"
+              style={{ border: 0 }}
+              allowFullScreen
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              title="Localização do Albergue São Vicente de Paulo"
+            />
+          </div>
+        </div>
+      </section>
+
       <section className="bg-svp-sienna py-14 lg:py-20">
         <div className="max-w-3xl mx-auto px-6 text-center">
-          <p
-            className="font-display text-[26px] leading-[1.25] md:text-4xl text-white italic mb-3"
-            data-animate
-          >
+          <p className="font-display text-[26px] leading-[1.25] md:text-4xl text-white italic mb-3" data-animate>
             Pequenas ações, grande impacto.
           </p>
           <p className="text-white/75 text-[13.5px] lg:text-base mb-6 lg:mb-8 leading-relaxed" data-animate data-delay="1">
@@ -89,16 +113,10 @@ export default function HomePage() {
             de quem mais precisa. Nosso painel de transparência garante isso.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-2.5 sm:gap-4" data-animate data-delay="2">
-            <Link
-              href="/como-doar"
-              className="bg-white text-svp-sienna font-bold text-sm px-8 py-3.5 rounded-xl hover:bg-svp-cream transition-colors"
-            >
+            <Link href="/como-doar" className="bg-white text-svp-sienna font-bold text-sm px-8 py-3.5 rounded-xl hover:bg-svp-cream transition-colors">
               Como doar
             </Link>
-            <Link
-              href="/transparencia"
-              className="border border-white/45 text-white font-semibold text-sm px-8 py-3.5 rounded-xl hover:border-white/80 transition-colors"
-            >
+            <Link href="/transparencia" className="border border-white/45 text-white font-semibold text-sm px-8 py-3.5 rounded-xl hover:border-white/80 transition-colors">
               Ver transparência <ArrowRight size={14} className="inline ml-1" />
             </Link>
           </div>

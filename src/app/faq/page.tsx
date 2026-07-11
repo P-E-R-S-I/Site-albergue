@@ -1,8 +1,10 @@
-import { Suspense } from "react";
-import FAQData from "@/components/sections/FAQData";
+import { getFaqs, getInfoAlbergue } from "@/lib/supabase";
+import FAQAccordion from "@/components/sections/FAQAccordion";
+import { MessageCircle } from "lucide-react";
 import { buildMetadata } from "@/lib/seo";
 
-export const dynamic = "force-dynamic";
+// Cache de 30s — ver comentário em src/app/layout.tsx.
+export const revalidate = 30;
 
 export const metadata = buildMetadata({
   title: "Perguntas Frequentes",
@@ -11,22 +13,11 @@ export const metadata = buildMetadata({
   path: "/faq",
 });
 
-function FAQSkeleton() {
-  return (
-    <div className="max-w-3xl mx-auto px-5 lg:px-8 py-14 space-y-3 animate-pulse">
-      {[0, 1, 2, 3, 4, 5].map((i) => (
-        <div key={i} className="h-16 bg-white border border-svp-border rounded-xl" />
-      ))}
-    </div>
-  );
-}
+export default async function FAQPage() {
+  const [faqs, info] = await Promise.all([getFaqs(), getInfoAlbergue()]);
 
-// Página não é mais async: cabeçalho (estático) chega na hora; a lista de
-// perguntas — que depende do banco — fica atrás do <Suspense>.
-export default function FAQPage() {
   return (
     <div className="bg-svp-cream min-h-screen">
-      {/* Cabeçalho — estático */}
       <div className="bg-svp-dark relative overflow-hidden py-20">
         <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
           <div className="absolute -top-20 -right-32 w-[500px] h-[500px] rounded-full bg-svp-sienna/10 blur-3xl" />
@@ -48,9 +39,31 @@ export default function FAQPage() {
         </div>
       </div>
 
-      <Suspense fallback={<FAQSkeleton />}>
-        <FAQData />
-      </Suspense>
+      <div className="max-w-3xl mx-auto px-5 lg:px-8 py-16">
+        <FAQAccordion faqs={faqs} />
+
+        <div className="mt-14 bg-svp-sienna rounded-2xl p-8 text-center">
+          <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
+            <MessageCircle size={22} className="text-white" />
+          </div>
+          <h2 className="font-display text-2xl text-white font-semibold mb-2">
+            Não encontrou sua resposta?
+          </h2>
+          <p className="text-white/70 text-sm mb-6 leading-relaxed">
+            Nossa equipe está disponível pelo WhatsApp para responder qualquer dúvida
+            com calma e cuidado.
+          </p>
+          <a
+            href={info.whatsapp}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 bg-white text-svp-sienna font-semibold text-sm px-6 py-3 rounded-full hover:bg-svp-cream transition-colors"
+          >
+            <MessageCircle size={16} />
+            Falar com a equipe pelo WhatsApp
+          </a>
+        </div>
+      </div>
     </div>
   );
 }

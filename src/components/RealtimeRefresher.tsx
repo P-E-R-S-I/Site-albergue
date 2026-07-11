@@ -3,12 +3,12 @@
 // =============================================================================
 // RealtimeRefresher
 // Assina mudanças nas tabelas-ledger do Supabase e dá router.refresh() quando
-// algo muda. Como as páginas são `force-dynamic`, o refresh re-busca as views no
-// servidor e os cards/gráficos sobem ao vivo — sem reload de página.
+// algo muda — um "empurrão" pra tentar mostrar a mudança na hora. As páginas
+// agora usam cache de 30s (revalidate = 30) em vez de force-dynamic, então na
+// pior das hipóteses (se o refresh não pegar dado novo por algum motivo) a
+// mudança aparece sozinha em até 30s de qualquer forma.
 //
 // Uso: <RealtimeRefresher /> em qualquer página dinâmica (transparencia, como-doar).
-// O doador com a página aberta vê a doação Pix / o estoque mudarem na hora em que
-// a equipe confirma o lançamento no app de gestão.
 // =============================================================================
 
 import { useEffect, useRef } from "react";

@@ -7,3 +7,10 @@ out/
 
 # Local Netlify folder
 .netlify
+
+# Artefato de build do TypeScript
+tsconfig.tsbuildinfo
+
+# Arquivos de credenciais (nunca versionar)
+CREDENCIAIS*.txt
+*.credentials.txt

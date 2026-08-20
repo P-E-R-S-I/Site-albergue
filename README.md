@@ -6,6 +6,17 @@ Projeto de extensão universitária — Bacharelado em Inteligência Artificial,
 **Frente 3** do projeto de extensão (de 4 frentes no total).  
 Consome dados da **Frente 1 (Núcleo de Dados / Supabase)** via API pública.
 
+Organização: [P.E.R.S.I](https://github.com/P-E-R-S-I) · Repositório oficial:
+[`P-E-R-S-I/Site-albergue`](https://github.com/P-E-R-S-I/Site-albergue)
+
+- **Produção:** https://albergue-sao-vicente-site.netlify.app
+- **App de gestão (Frente 2):** [`P-E-R-S-I/albergue-sao-vicente-app`](https://github.com/P-E-R-S-I/albergue-sao-vicente-app)
+  — é ele que **escreve** no banco; este site **só lê**.
+- **Schema do banco:** [`supabase/SCHEMA.md`](https://github.com/P-E-R-S-I/albergue-sao-vicente-app/blob/main/supabase/SCHEMA.md) (no repo do app)
+
+> As chaves do Supabase para o `.env.local` são distribuídas pelo gestor do projeto.
+> Sem elas o site roda em modo placeholder, sem quebrar nada.
+
 ---
 
 ## Visão Geral

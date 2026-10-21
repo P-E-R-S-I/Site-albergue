@@ -8,6 +8,7 @@ import "@fontsource-variable/plus-jakarta-sans/wght.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ActionBarMobile from "@/components/ActionBarMobile";
+import ChatWidget from "@/components/ChatWidget";
 import ScrollAnimator from "@/components/ScrollAnimator";
 import { buildMetadata, SITE_NAME, SITE_URL } from "@/lib/seo";
 import { getInfoAlbergue } from "@/lib/supabase";
@@ -67,6 +68,7 @@ export default async function RootLayout({
         <Footer info={info} />
         {/* Barra fixa de ação (mobile) — o pb-[68px] do body reserva o espaço */}
         <ActionBarMobile whatsapp={info.whatsapp} />
+        <ChatWidget whatsapp={info.whatsapp} />
       </body>
     </html>
   );

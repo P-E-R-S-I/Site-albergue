@@ -20,7 +20,7 @@ import type { Metadata } from "next";
 
 // Domínio real de produção (Netlify). Se um domínio próprio for configurado
 // no futuro, atualizar apenas esta constante.
-export const SITE_URL = "https://site-albergue-sao-vincente.netlify.app";
+export const SITE_URL = "https://alberguesaovicente.com.br";
 export const SITE_NAME = "Albergue São Vicente de Paulo";
 
 // Imagem padrão usada nos cards de compartilhamento (WhatsApp, Instagram,

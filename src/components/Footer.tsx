@@ -112,9 +112,14 @@ export default function Footer({ info }: { info: InfoAlbergue }) {
 
       {/* Rodapé */}
       <div className="border-t border-white/10 max-w-6xl mx-auto px-5 lg:px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
-        <p className="text-svp-cream/40 text-xs">
-          © {new Date().getFullYear()} Albergue São Vicente de Paulo. Todos os direitos reservados.
-        </p>
+        <div className="flex flex-col items-center sm:items-start gap-1 text-center sm:text-left">
+          <p className="text-svp-cream/55 text-xs font-medium">
+            ASSOCIACAO DE BENEFICENCIA ALBERGUE SAO VICENTE DE PAULO DE JATAI
+          </p>
+          <p className="text-svp-cream/40 text-xs">
+            © {new Date().getFullYear()} Associação de Beneficência Albergue São Vicente de Paulo de Jataí — Albergue São Vicente de Paulo. Todos os direitos reservados.
+          </p>
+        </div>
         <p className="text-svp-cream/30 text-xs">
           Site desenvolvido por estudantes de IA — UFJ (Projeto de Extensão)
         </p>

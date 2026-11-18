@@ -88,10 +88,10 @@ export default function ChatWidget({ whatsapp }: { whatsapp?: string }) {
       <style>{`
         #asv-chat-toggle {
           position: fixed;
-          bottom: 82px;
-          right: 20px;
-          width: 60px;
-          height: 60px;
+          bottom: 78px;
+          right: 14px;
+          width: 52px;
+          height: 52px;
           border-radius: 50%;
           background: linear-gradient(135deg, #1a73e8 0%, #0f4c81 100%);
           border: 2px solid #ffffff;
@@ -103,10 +103,32 @@ export default function ChatWidget({ whatsapp }: { whatsapp?: string }) {
           z-index: 9999;
           transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
         }
+        #asv-chat-toggle svg {
+          width: 22px;
+          height: 22px;
+        }
+        @media (min-width: 640px) {
+          #asv-chat-toggle {
+            width: 58px;
+            height: 58px;
+            right: 20px;
+            bottom: 84px;
+          }
+          #asv-chat-toggle svg {
+            width: 25px;
+            height: 25px;
+          }
+        }
         @media (min-width: 1024px) {
           #asv-chat-toggle {
             bottom: 24px;
             right: 24px;
+            width: 60px;
+            height: 60px;
+          }
+          #asv-chat-toggle svg {
+            width: 26px;
+            height: 26px;
           }
         }
         #asv-chat-toggle:hover {
@@ -115,15 +137,15 @@ export default function ChatWidget({ whatsapp }: { whatsapp?: string }) {
         }
         #asv-chat-window {
           position: fixed;
-          bottom: 152px;
-          right: 16px;
-          width: 380px;
-          max-width: calc(100vw - 32px);
-          height: 540px;
-          max-height: calc(100vh - 180px);
+          bottom: 138px;
+          right: 12px;
+          width: calc(100vw - 24px);
+          max-width: 340px;
+          height: 410px;
+          max-height: calc(100dvh - 165px);
           background: #ffffff;
           border: 1px solid #e2e8f0;
-          border-radius: 22px;
+          border-radius: 18px;
           box-shadow: 0 20px 50px rgba(15, 23, 42, 0.16), 0 4px 16px rgba(15, 23, 42, 0.06);
           display: flex;
           flex-direction: column;
@@ -132,12 +154,81 @@ export default function ChatWidget({ whatsapp }: { whatsapp?: string }) {
           font-family: var(--font-jakarta), 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
           animation: asvChatSlideUp 0.28s cubic-bezier(0.16, 1, 0.3, 1);
         }
+        @media (min-width: 640px) {
+          #asv-chat-window {
+            bottom: 152px;
+            right: 20px;
+            width: 370px;
+            max-width: calc(100vw - 32px);
+            height: 520px;
+            max-height: calc(100vh - 170px);
+            border-radius: 22px;
+          }
+        }
         @media (min-width: 1024px) {
           #asv-chat-window {
             bottom: 98px;
             right: 24px;
+            width: 380px;
+            max-width: calc(100vw - 32px);
             height: 560px;
             max-height: calc(100vh - 120px);
+            border-radius: 22px;
+          }
+        }
+        #asv-chat-window .asv-header {
+          background: #ffffff;
+          padding: 12px 14px;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          border-bottom: 1px solid #f1f5f9;
+        }
+        #asv-chat-window .asv-messages {
+          flex: 1;
+          overflow-y: auto;
+          padding: 14px 12px;
+          background: #ffffff;
+          display: flex;
+          flex-direction: column;
+          gap: 11px;
+        }
+        #asv-chat-window .asv-bubble {
+          max-width: 82%;
+          padding: 10px 13px;
+          border-radius: 16px;
+          font-size: 13.5px;
+          line-height: 1.5;
+        }
+        #asv-chat-window .asv-input-area {
+          padding: 10px 12px;
+          background: #ffffff;
+          border-top: 1px solid #f1f5f9;
+        }
+        #asv-chat-window textarea {
+          font-size: 16px !important;
+        }
+        @media (min-width: 640px) {
+          #asv-chat-window .asv-header {
+            padding: 16px 18px;
+            gap: 12px;
+          }
+          #asv-chat-window .asv-messages {
+            padding: 18px 16px;
+            gap: 14px;
+          }
+          #asv-chat-window .asv-bubble {
+            max-width: 78%;
+            padding: 12px 15px;
+            border-radius: 18px;
+            font-size: 14.5px;
+            line-height: 1.55;
+          }
+          #asv-chat-window .asv-input-area {
+            padding: 12px 14px;
+          }
+          #asv-chat-window textarea {
+            font-size: 14.5px !important;
           }
         }
         @keyframes asvChatSlideUp {
@@ -174,28 +265,19 @@ export default function ChatWidget({ whatsapp }: { whatsapp?: string }) {
       {isOpen && (
         <div id="asv-chat-window">
           {/* Header */}
-          <div
-            style={{
-              background: "#ffffff",
-              padding: "16px 18px",
-              display: "flex",
-              alignItems: "center",
-              gap: "12px",
-              borderBottom: "1px solid #f1f5f9",
-            }}
-          >
+          <div className="asv-header">
             <div
               style={{
-                width: 42,
-                height: 42,
-                borderRadius: 14,
+                width: 38,
+                height: 38,
+                borderRadius: 12,
                 background: "linear-gradient(135deg, #1a73e8 0%, #0f4c81 100%)",
                 color: "#ffffff",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 fontWeight: 600,
-                fontSize: 14,
+                fontSize: 13.5,
                 boxShadow: "0 4px 10px rgba(26, 115, 232, 0.22)",
                 flexShrink: 0,
               }}
@@ -203,12 +285,12 @@ export default function ChatWidget({ whatsapp }: { whatsapp?: string }) {
               SV
             </div>
             <div style={{ flex: 1 }}>
-              <div style={{ fontWeight: 600, fontSize: 15, color: "#0f172a" }}>
+              <div style={{ fontWeight: 600, fontSize: 14.5, color: "#0f172a" }}>
                 Albergue São Vicente
               </div>
               <div
                 style={{
-                  fontSize: 12,
+                  fontSize: 11.5,
                   color: "#64748b",
                   display: "flex",
                   alignItems: "center",
@@ -225,7 +307,7 @@ export default function ChatWidget({ whatsapp }: { whatsapp?: string }) {
                     boxShadow: "0 0 0 3px rgba(16, 185, 129, 0.18)",
                   }}
                 />
-                <span>Atendente virtual online</span>
+                <span>Atendimento online</span>
               </div>
             </div>
             <button
@@ -249,33 +331,23 @@ export default function ChatWidget({ whatsapp }: { whatsapp?: string }) {
           </div>
 
           {/* Mensagens (Fundo Branco Puro) */}
-          <div
-            style={{
-              flex: 1,
-              overflowY: "auto",
-              padding: "18px 16px",
-              background: "#ffffff",
-              display: "flex",
-              flexDirection: "column",
-              gap: 14,
-            }}
-          >
+          <div className="asv-messages">
             {messages.map((m, idx) => (
               <div
                 key={idx}
                 style={{
                   display: "flex",
-                  gap: 10,
+                  gap: 8,
                   alignItems: "flex-end",
                   flexDirection: m.role === "user" ? "row-reverse" : "row",
                 }}
               >
                 <div
                   style={{
-                    width: 28,
-                    height: 28,
-                    borderRadius: 10,
-                    fontSize: 11,
+                    width: 26,
+                    height: 26,
+                    borderRadius: 9,
+                    fontSize: 10.5,
                     fontWeight: 600,
                     display: "flex",
                     alignItems: "center",
@@ -289,20 +361,16 @@ export default function ChatWidget({ whatsapp }: { whatsapp?: string }) {
                   {m.role === "bot" ? "SV" : "Eu"}
                 </div>
                 <div
+                  className="asv-bubble"
                   style={{
-                    maxWidth: "78%",
-                    padding: "12px 15px",
-                    borderRadius: 18,
-                    fontSize: 14.5,
-                    lineHeight: 1.55,
                     background:
                       m.role === "bot"
                         ? "#ffffff"
                         : "linear-gradient(135deg, #1a73e8 0%, #0f4c81 100%)",
                     color: m.role === "bot" ? "#1e293b" : "#ffffff",
                     border: m.role === "bot" ? "1px solid #e2e8f0" : "none",
-                    borderBottomLeftRadius: m.role === "bot" ? 5 : 18,
-                    borderBottomRightRadius: m.role === "user" ? 5 : 18,
+                    borderBottomLeftRadius: m.role === "bot" ? 5 : 16,
+                    borderBottomRightRadius: m.role === "user" ? 5 : 16,
                     boxShadow:
                       m.role === "bot"
                         ? "0 2px 8px rgba(15, 23, 42, 0.04)"
@@ -315,13 +383,13 @@ export default function ChatWidget({ whatsapp }: { whatsapp?: string }) {
             ))}
 
             {loading && (
-              <div style={{ display: "flex", gap: 10, alignItems: "flex-end" }}>
+              <div style={{ display: "flex", gap: 8, alignItems: "flex-end" }}>
                 <div
                   style={{
-                    width: 28,
-                    height: 28,
-                    borderRadius: 10,
-                    fontSize: 11,
+                    width: 26,
+                    height: 26,
+                    borderRadius: 9,
+                    fontSize: 10.5,
                     fontWeight: 600,
                     display: "flex",
                     alignItems: "center",
@@ -335,8 +403,8 @@ export default function ChatWidget({ whatsapp }: { whatsapp?: string }) {
                 </div>
                 <div
                   style={{
-                    padding: "12px 15px",
-                    borderRadius: 18,
+                    padding: "10px 14px",
+                    borderRadius: 16,
                     borderBottomLeftRadius: 5,
                     background: "#ffffff",
                     border: "1px solid #e2e8f0",
@@ -354,13 +422,7 @@ export default function ChatWidget({ whatsapp }: { whatsapp?: string }) {
           </div>
 
           {/* Input */}
-          <div
-            style={{
-              padding: "12px 14px",
-              background: "#ffffff",
-              borderTop: "1px solid #f1f5f9",
-            }}
-          >
+          <div className="asv-input-area">
             <div
               style={{
                 display: "flex",

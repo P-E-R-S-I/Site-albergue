@@ -14,7 +14,7 @@ export default function ChatWidget({ whatsapp }: { whatsapp?: string }) {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "bot",
-      text: "Olá! Sou o atendente virtual do Albergue São Vicente de Paula. 😊 Como posso ajudar?",
+      text: "Olá! Aqui é do atendimento do Albergue São Vicente de Paula. Como posso ajudar você hoje?",
     },
   ]);
   const [input, setInput] = useState("");
@@ -310,42 +310,6 @@ export default function ChatWidget({ whatsapp }: { whatsapp?: string }) {
                   }}
                 >
                   {renderFormattedText(m.text)}
-                  {m.role === "bot" && (
-                    <>
-                      <br />
-                      <button
-                        onClick={() => {
-                          if (whatsapp) {
-                            window.open(whatsapp, "_blank", "noopener,noreferrer");
-                          } else {
-                            setMessages((prev) => [
-                              ...prev,
-                              {
-                                role: "bot",
-                                text: "Entendido! Para falar diretamente com nossa equipe, entre em contato pelo telefone/WhatsApp (64) 3631-1437 ou presencialmente na Rua Miranda de Carvalho, 1929 – Jataí/GO. 🙏",
-                              },
-                            ]);
-                          }
-                        }}
-                        style={{
-                          display: "inline-flex",
-                          alignItems: "center",
-                          gap: 5,
-                          marginTop: 10,
-                          fontSize: 12,
-                          fontWeight: 500,
-                          color: "#0f4c81",
-                          border: "1px solid #cbd5e1",
-                          borderRadius: 999,
-                          padding: "5px 12px",
-                          cursor: "pointer",
-                          background: "#ffffff",
-                        }}
-                      >
-                        👤 Falar com pessoa real
-                      </button>
-                    </>
-                  )}
                 </div>
               </div>
             ))}

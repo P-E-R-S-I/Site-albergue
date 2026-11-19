@@ -113,8 +113,11 @@ export default function Footer({ info }: { info: InfoAlbergue }) {
       {/* Rodapé */}
       <div className="border-t border-white/10 max-w-6xl mx-auto px-5 lg:px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
         <div className="flex flex-col items-center sm:items-start gap-1 text-center sm:text-left">
-          <p className="text-svp-cream/55 text-xs font-medium">
-            ASSOCIACAO DE BENEFICENCIA ALBERGUE SAO VICENTE DE PAULO DE JATAI
+          <p className="text-svp-cream/60 text-xs font-medium">
+            ASSOCIACAO DE BENEFICENCIA ALBERGUE SAO VICENTE DE PAULO DE JATAI — CNPJ: 02.261.279/0001-09
+          </p>
+          <p className="text-svp-cream/45 text-xs">
+            Rua Orozimbo Lopes de Carvalho, 1097, Quadra GL-A Lote Área, Dom Abel, CEP 75806-195 — Jataí, GO • Tel: (64) 3631-4340 / (64) 99983-9893 • contato@alberguesaovicente.com.br
           </p>
           <p className="text-svp-cream/40 text-xs">
             © {new Date().getFullYear()} Associação de Beneficência Albergue São Vicente de Paulo de Jataí — Albergue São Vicente de Paulo. Todos os direitos reservados.
